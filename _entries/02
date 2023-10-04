@@ -1,0 +1,15 @@
+Import Repo
+Create Build pipeline
+Use Harbor
+Create CD pipeline
+Modifier pour avoir 10 replicas
+Verifier la repartition sur les noeuds
+Faire un deuxieme déploiement et configurer le rollout
+DevSecOps => scanner les images
+Seconde application
+Ajout de workload identity
+Configuration pour se connecter à une DB cosmosDB
+
+Appli avec des requests/limit
+KEDA
+trouver un scenario où ca scale
