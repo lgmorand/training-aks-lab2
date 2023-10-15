@@ -7,7 +7,7 @@ parent-id: intro
 
 ### Tools
 
-This course is entirely explained from a Linux environment (on Windows, a quick win can be to [go with the Windows Linux Subsystem](https://learn.microsoft.com/en-us/windows/wsl/install) or [Git BASH](https://gitforwindows.org)).
+This course is entirely explained from a Linux environment (on Windows, a quick win can be to [go with the Windows Linux Subsystem](https://learn.microsoft.com/en-us/windows/wsl/install)).
 
 You can use [the Azure Cloud Shell service](https://shell.azure.com) once you log in with an Azure subscription. The Azure Cloud Shell has the Azure CLI pre-installed and configured to connect to your Azure subscription, as well as [kubectl](https://github.com/kubernetes/kubectl).
 
@@ -20,6 +20,8 @@ Alternatively, you need to meet the following requirements:
 ### Azure subscription
 
 #### If you have an Azure subscription
+
+You may use your subscription or use a provided one by your company.
 
 {% collapsible %}
 
@@ -60,6 +62,6 @@ You should now have access to the Azure Cloud Shell
 
 #### Tips for uploading and editing files in Azure Cloud Shell
 
-- You can use `code <file you want to edit>` in Azure Cloud Shell to open the built-in text editor.
+- You can use `code <file you want to edit>` in Azure Cloud Shell to open the built-in text editor. The "Close" icon is on the top right corner and is sometimes not visible.
 - You can upload files to the Azure Cloud Shell by dragging and dropping them
-- You can also do a `curl -o filename.ext https://file-url/filename.ext` to download a file from the internet.
+- You can also do a `curl -o filename.ext https://file-url/filename.ext` to download a file from the internet. (or use the *git clone* command)
