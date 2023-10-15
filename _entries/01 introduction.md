@@ -1,7 +1,7 @@
 ---
 sectionid: intro
 sectionclass: h1
-title: The Azure Kubernetes Workshop - Lab n°2
+title: The AKS Workshop - Lab n°2
 type: nocount
 is-parent: yes
 ---

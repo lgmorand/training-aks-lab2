@@ -7,18 +7,20 @@ parent-id: build
 
 #### Get the `webapp` source code
 
-Download the `webapp` from the Github repository: [hello-worlds.zip](https://github.com/lgmorand/aks-workshop/raw/main/sample-app/hello-worlds.zip)
+Download the `webapp` from the Github repository: [hello-worlds.zip](https://github.com/lgmorand/aks-workshop/raw/main/sample-app/hello-worlds.zip). If you are using the Cloud Shell you can either download and upload the files, or you can use *[wget](https://doc.ubuntu-fr.org/wget)* and *[unzip](https://doc.ubuntu-fr.org/zip)* commands.
 
 {% collapsible %}
 
 ```sh
-wget -O hello-worlds.zip https://github.com/lgmorand/aks-workshop/raw/main/sample-app/hello-worlds.zip
+wget -O hello-worlds.zip https://github.com/lgmorand/engie-aks-lab2/raw/main/sample-app/hello-worlds.zip
 unzip hello-worlds.zip
 cd hello-worlds
 cd nodejs
 ```
 
 {% endcollapsible %}
+
+> **Tip**: Once downloaded, it may be useful to look and read some of the files contained in the ZIP.
 
 #### Build a Docker image
 
