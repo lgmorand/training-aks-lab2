@@ -21,11 +21,13 @@ kubectl scale deployment/nginx-deployment --replicas=5
 
 It worked but is it a good practice to change the numbers of replicas directly in the cluster ? The answer is "no" because on the next run of your deployment pipeline, the number of replicas will come back to the original value. It is called "configuration drift" because your source of truth (the repository) is not equal to your production environment.
 
+Edit your manifest accordingly and specify the number of replicas there. Run again your deployment pipeline.
+
 #### Control the deployment
 
 Your pipeline went fine but how do you ensure that your replicas are here ?
 
-Connect to your cluster and list your deployment to check that you have 10 running containers.
+Connect to your cluster and list your deployment to check that you have **10** running containers.
 
 {% collapsible %}
 
