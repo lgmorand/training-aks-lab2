@@ -21,5 +21,7 @@ You will also cover subjects such as:
 
 - DevSecOps
 - Scaling (manual and auto)
-- Security
-- etc.
+- Implement some security
+- some other fun things
+
+Be ready!
