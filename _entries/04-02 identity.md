@@ -28,7 +28,7 @@ Create secret
 kubectl create secret generic <azure-voting-redis-secret> \
   --from-literal=password=<your_password> -n <your_namespace>
 ```
-Replace <azure-voting-redis-secret>, <your_password> by the secret name and redis password of your choice and <your_namespace> by the namespace where you need to deploy the secret.
+Replace azure-voting-redis-secret, your_password by the secret name and redis password of your choice and your_namespace by the namespace where you need to deploy the secret.
 You should see an output similar to:
 
 ```sh
@@ -39,12 +39,17 @@ secret/azure-voting-redis-secret created
 
 ##### Deploy the web app and redis backend
 
-path to images in harbor + nginx config?
+** path to images in harbor + nginx config? **
+
 In this section, you will deploy the front web app and the redis backend. Redis password was stored in an AKS secret.
 
-You will use an image from bitnami for Redis backend (mcr.microsoft.com/oss/bitnami), tag 6.0.8. You will have to add an env variable named REDIS_PASSWORD that will find the password in AKS secret created before.
-You will use an image from azuredocs for the web app (mcr.microsoft.com/azuredocs/azure-vote-front), tag v1. You will have to add 2 env variables. The first, named REDIS_PWD that will find the password in AKS secret created before and the second named REDIS which is the name of your redis backend container.
+**Task Hints**
 
+* You will use an image from bitnami for Redis backend (mcr.microsoft.com/oss/bitnami), tag 6.0.8.
+* You will have to add an env variable named REDIS_PASSWORD that will find the password in AKS secret created before.
+* You will use an image from azuredocs for the web app (mcr.microsoft.com/azuredocs/azure-vote-front), tag v1.
+* You will have to add 2 env variables. The first, named REDIS_PWD that will find the password in AKS secret created before and the second named REDIS which is the name of your redis backend container.
+ 
 {% collapsible %}
 
 Create your yaml file deployment.yaml.
@@ -185,13 +190,13 @@ If password is incorrect, you should see in logs something like: redis.exception
 kubectl logs <pod_name> -n <your_namespace>
 ```
 
-**** a remplacer avec nginx ******* Get the service IP to test the app in your browser:
+** a remplacer avec nginx ** Get the service IP to test the app in your browser:
 
 ```sh
 kubectl get svc -n <your_namespace>
 ```
 
-**** a remplacer avec nginx ******* You should see an output similar to:
+** a remplacer avec nginx ** You should see an output similar to:
 
 ```sh
 NAME               TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
@@ -199,7 +204,7 @@ azure-vote-back    ClusterIP      10.0.194.219   <none>        6379/TCP       30
 azure-vote-front   LoadBalancer   10.0.74.34     4.208.29.24   80:31365/TCP   30s
 ```
 
-Test your app in your browser: http://<EXTERNAL-IP>
+Test your app in your browser: http://EXTERNAL-IP-FRONT
 
 {% endcollapsible %}
 
@@ -211,7 +216,19 @@ Kubernetes secrets are just base64 encoded strings. Anyone with access to the cl
 kubectl get secrets <azure-voting-redis-secret> -o jsonpath='{.data.password}' | base64 --decode
 ```
 
-There are a few ways to store secrets in a more secure manner. One way is to use Azure Key Vault. So you are going to delete first the kubernetes secret, create a secret in an Azure Key vault already provisionned for you and then use this secret.
+There are a few ways to store secrets in a more secure manner. One recommended way is to use Azure Key Vault. 
+
+So you are going to first delete the kubernetes secret created before, create a secret in an Azure Key vault already provisionned for you and then use this secret in your deployment.
+
+##### Delete Kubernetes secret
+
+##### Create a secret in Azure Key Vault
+
+##### Authentication to Azure Key Vault using workload identity
+
+##### Secret Store CSI driver
+
+##### Update the deployment
 
 
 > **Resources**
