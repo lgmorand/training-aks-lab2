@@ -1,7 +1,7 @@
 ---
 sectionid: manifest
 sectionclass: h2
-title: Scale your application
+title: Deploy your application
 parent-id: deploy
 ---
 

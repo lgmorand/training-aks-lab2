@@ -34,9 +34,55 @@ When you want to secure a containerize application you need to scan/test differe
 
 Each of them require different tools. To analyse your code, you need a SAST (Static Analysis Security Testing) and for the dependencies, you need a SCA (Static Composition Analysis). You are going to focus on your dockerfile and kubernetes manifest. You goal is to include steps in your build pipeline to scan them and not to push the image if issues are found
 
-You can use any tool of your choice, such as Trivy, [hadolint](https://kristhecodingunicorn.com/post/k8s_hadolint/) or [other tools](https://github.com/lgmorand/k8s-devSecOps) but you need to implement in your pipeline. You must lint your files but also check for vulnerabilities.
+You can use any tool of your choice, such as [hadolint](https://kristhecodingunicorn.com/post/k8s_hadolint/) or [other tools](https://github.com/lgmorand/k8s-devSecOps) (we recommend kubeval and checkov) but you need to implement them in your pipeline. You must lint your files (dockerfile and manifest) but also check for vulnerabilities.
 
-> Note: you may to use more than one tool ;-)
+> Note: you may have to use more than one tool; Keep in mind that for this lab you may have errors in your files and y
 
 
-Trivy => une tache existe
+{% collapsible %}
+
+Since we do the build inside the docker file, we only need one step, one to build the docker image
+
+``` yaml
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- script: |
+    echo 'Downloading Hadolint to lint Dockerfile...'
+    wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+    chmod +x hadolint-Linux-x86_64
+    mv hadolint-Linux-x86_64 hadolint
+
+    echo 'Start Dockerfile lint...'
+    ./hadolint dockerfile -f tty > results.txt
+
+    cat results.txt
+  displayName: hadolint
+
+- script: |
+    echo 'Downloading kubeval'
+    wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+    tar xf kubeval-linux-amd64.tar.gz
+    sudo cp kubeval /usr/local/bin
+
+    echo 'Scanning your manifest'
+    kubeval mymanifest.yaml
+  displayName: kubeval
+
+- script: |
+    echo 'Installing checkov'
+    pip3 install checkov
+
+    echo 'Scanning your manifest'
+    checkov --file mymanifest.yaml
+  displayName: checkov
+```
+
+{% endcollapsible %}
+
+Ideally you should also add a tool to scan for vulnerabilities in your docker base image.
