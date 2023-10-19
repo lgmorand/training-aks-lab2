@@ -2,7 +2,7 @@
 sectionid: scale
 sectionclass: h2
 title: Scale your application
-parent-id: build
+parent-id: deploy
 ---
 
 ### Scaling
