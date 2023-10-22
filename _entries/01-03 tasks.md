@@ -19,7 +19,7 @@ A FINIR
 
 ### Security
 
-A FINIR
+You will implement some DevSecOps principles by scanning your files and you will how to securely access resources outside of the cluster.
 
 ### Autoscalling
 

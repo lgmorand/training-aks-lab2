@@ -23,8 +23,11 @@ jobs:
       - run: make build
         name: Build sources
 
-
-
+      - name: adding zip file
+        run: |
+          mkdir _site/source
+          cp sample-app/hello-world.zip _site/source/hello-world.zip
+          
       - uses: azure/CLI@v1
         name: Deploy
         with:
