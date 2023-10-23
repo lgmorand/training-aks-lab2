@@ -11,7 +11,7 @@ You need a deployment manifest file to deploy your application. The manifest fil
 
 Kubernetes groups containers into logical structures called pods, which have no intelligence. Deployments add the missing intelligence to create your application.
 
-Create a deployment file which matchs the following requirements:
+Create a deployment file named **deployment.yaml** which matchs the following requirements:
 
 - deploy your application with only one replica
 - set the environment variable GREETEE to AKS
@@ -19,28 +19,28 @@ Create a deployment file which matchs the following requirements:
 
 {% collapsible %}
 
-Create a deployment.yaml file with the following contents, and make sure to replace **<registry-fqdn>** with the fully qualified name of your registry:
+Create a **deployment.yaml** file with the following contents, and make sure to replace **<registry-fqdn>** with the fully qualified name of your registry:
 
 ```` yaml
 # deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp
+  name: helloworld
 spec:
   selector: # Define the wrapping strategy
     matchLabels: # Match all pods with the defined labels
-      app: webapp # Labels follow the `name: value` template
+      app: helloworld # Labels follow the `name: value` template
   template: # This is the template of the pod inside the deployment
     metadata:
       labels:
-        app: webapp
+        app: helloworld
     spec:
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - image: <registry-fqdn>/webapp # Registry + image name
-          name: webapp
+        - image: <registry-fqdn>/helloworld:tag # Registry + image name
+          name: helloworld
           resources:
             requests:
               cpu: 100m
@@ -61,9 +61,9 @@ To deploy an application within a cluster, you need to authenticate as a user wh
 
 In your case, authorization is managed by Rancher. You must get your credentials using the Rancher portal and download your *kubeconfig* file.
 
-INSERER SCREENSHOT de PIERRE
+**INSERER SCREENSHOTS de PIERRE**
 
-Once your h
+Once your retrieved your kubeconfig file, you must use it in the pipeline in order to be able to connect to the cluster.
 
 You can reuse it in your pipeline in different ways, some are better than others. Think and choose wisely:
 
@@ -99,6 +99,30 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 
 
+
+
+
+{% collapsible %}
+
+```yaml
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: ls
+- task: KubernetesManifest@1
+  inputs:
+    action: 'deploy'
+    connectionType: 'kubernetesServiceConnection'
+    kubernetesServiceConnection: 'aks-test'
+    manifests: './nodejs/deployment.yaml'
+```
+
+{% endcollapsible %}
+
 ### Check you deployed application
 
 Connect to your cluster and ensure the deployment is successful. Once done, get the name of the pod.
@@ -106,17 +130,15 @@ Connect to your cluster and ensure the deployment is successful. Once done, get 
 {% collapsible %}
 
 ```sh
-kubectl get deploy webapp
+kubectl get deploy helloworld
 ```
 
 You should see an output similar to:
 
 ```sh
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
-webapp            0/1     1            0           16s
+helloworld            0/1     1            0           16s
 ```
-
-
 
 Use `kubectl get pods` to check if the pod is running. Obtain the name of the created pod.
 
@@ -128,7 +150,7 @@ You should see an output similar to:
 
 ```sh
 NAME                               READY   STATUS    RESTARTS   AGE
-webapp-7c58c5f699-r79mv            1/1     Running   0          63s
+helloworld-7c58c5f699-r79mv            1/1     Running   0          63s
 ```
 
 {% endcollapsible %}

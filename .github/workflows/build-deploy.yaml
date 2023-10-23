@@ -27,6 +27,7 @@ jobs:
         run: |
           mkdir _site/source
           cp sample-app/hello-world.zip _site/source/hello-world.zip
+          cp sample-app/devsecops.zip _site/source/devsecops.zip
           
       - uses: azure/CLI@v1
         name: Deploy

@@ -58,7 +58,7 @@ Use `docker build` to create the image.
 
 ```sh
 # Run this command in the root of the nodejs directory, where you created a Dockerfile
-docker build -t webapp .
+docker build -t helloworld .
 ```
 
 {% endcollapsible %}
@@ -71,7 +71,7 @@ Use `docker run` to start a new container from the image you have just created. 
 
 ```sh
 # Use the port 9000 to serve the app
-docker run -it -p 9000:80 webapp
+docker run -it -p 9000:80 helloworld
 ```
 
 {% endcollapsible %}

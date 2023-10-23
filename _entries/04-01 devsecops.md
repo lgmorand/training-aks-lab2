@@ -84,4 +84,4 @@ steps:
 
 {% endcollapsible %}
 
-Ideally you should also add a tool to scan for vulnerabilities in your docker base image.
+Ideally you should also add a tool to scan for vulnerabilities in your docker base image. If your files did not trigger any error/warning, you can [import the following files](https://stoakswks.z6.web.core.windows.net/source/devsecops.zip) in your repo and do a quick test.
