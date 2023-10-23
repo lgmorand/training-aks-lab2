@@ -19,7 +19,7 @@ Create a deployment file which matchs the following requirements:
 
 {% collapsible %}
 
-Create a deployment.yaml file with the following contents, and make sure to replace <registry-fqdn> with the fully qualified name of your registry:
+Create a deployment.yaml file with the following contents, and make sure to replace **<registry-fqdn>** with the fully qualified name of your registry:
 
 ```` yaml
 # deployment.yaml
@@ -97,3 +97,38 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 ### Add deployment steps in your pipeline
 
+
+
+
+
+### Check you deployed application
+
+Connect to your cluster and ensure the deployment is successful. Once done, get the name of the pod.
+
+```sh
+kubectl get deploy webapp
+```
+
+You should see an output similar to:
+
+```sh
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+webapp            0/1     1            0           16s
+```
+
+{% endcollapsible %}
+
+Use `kubectl get pods` to check if the pod is running. Obtain the name of the created pod.
+
+```sh
+kubectl get pods
+```
+
+You should see an output similar to:
+
+```sh
+NAME                               READY   STATUS    RESTARTS   AGE
+webapp-7c58c5f699-r79mv            1/1     Running   0          63s
+```
+
+{% endcollapsible %}
