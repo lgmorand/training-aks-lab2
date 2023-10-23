@@ -38,7 +38,6 @@ You can use any tool of your choice, such as [hadolint](https://kristhecodinguni
 
 > Note: you may have to use more than one tool; Keep in mind that for this lab you may have errors in your files and y
 
-
 {% collapsible %}
 
 Since we do the build inside the docker file, we only need one step, one to build the docker image

@@ -5,5 +5,4 @@ title: Deployment
 is-parent: yes
 ---
 
-
-A FINIR
+It's now time to deploy your application in your kubernetes cluster.

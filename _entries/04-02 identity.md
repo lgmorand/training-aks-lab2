@@ -5,12 +5,11 @@ title: Secrets
 parent-id: security
 ---
 
-You will be deploying the Azure Voting App to Azure Kubernetes Service (AKS). This is a simple web app that lets you vote for things and displays the vote totals. You may recognize this app from Microsoft Docs which allows you to vote for "Dogs" or "Cats". 
+You will be deploying the Azure Voting App to Azure Kubernetes Service (AKS). This is a simple web app that lets you vote for things and displays the vote totals. You may recognize this app from Microsoft Docs which allows you to vote for "Dogs" or "Cats".
 
-The repo can be found here: [Azure-Samples/azure-voting-app-redis](https://github.com/Azure-Samples/azure-voting-app-redis). 
+The repo can be found here: [Azure-Samples/azure-voting-app-redis](https://github.com/Azure-Samples/azure-voting-app-redis).
 
 The web application is written in python (front) and this web app uses Redis as the backend database (back). The web app will use credentials to connect to Redis backend.
-
 
 #### Securing credentials using "Secrets"
 
@@ -19,7 +18,7 @@ In order to deploy the web app and redis in AKS, we need the redis password to b
 **Task Hints**
 
 * It's recommended to use kubectl and the `kubectl create secret generic` command to create redis password. Refer to the docs linked in the Resources section, or run `kubectl create secret generic -h` for details
- 
+
 Create secret
 
 {% collapsible %}
@@ -28,6 +27,7 @@ Create secret
 kubectl create secret generic <azure-voting-redis-secret> \
   --from-literal=password=<your_password> -n <your_namespace>
 ```
+
 Replace azure-voting-redis-secret, your_password by the secret name and redis password of your choice and your_namespace by the namespace where you need to deploy the secret.
 You should see an output similar to:
 
@@ -205,7 +205,7 @@ azure-vote-back    ClusterIP      10.0.194.219   <none>        6379/TCP       30
 azure-vote-front   LoadBalancer   10.0.74.34     10.2.0.24   80:31365/TCP   30s
 ```
 
-Test your app in your browser: http://EXTERNAL-IP-FRONT
+Test your app in your browser: [http://EXTERNAL-IP-FRONT](http://EXTERNAL-IP-FRONT)
 
 {% endcollapsible %}
 
@@ -217,7 +217,7 @@ Kubernetes secrets are just base64 encoded strings. Anyone with access to the cl
 kubectl get secrets <azure-voting-redis-secret> -o jsonpath='{.data.password}' | base64 --decode
 ```
 
-There are a few ways to store secrets in a more secure manner. One recommended way is to use Azure Key Vault. 
+There are a few ways to store secrets in a more secure manner. One recommended way is to use Azure Key Vault.
 So you are going to replace the kubernetes secret by a secret stored in Azure Key Vault and redeploy the application.
 
 ##### Delete Kubernetes secret
@@ -227,12 +227,13 @@ You will first delete the kubernetes secret created before.
 **Task Hints**
 
 * It's recommended to use kubectl and the `kubectl delete secret` command to delete a secret. Refer to the docs linked in the Resources section, or run `kubectl delete secret -h` for details
- 
+
 {% collapsible %}
 
 ```sh
 kubectl delete secret <azure-voting-redis-secret> -n <your_namespace>
 ```
+
 Replace azure-voting-redis-secret and your_namespace by your secret's name and your_namespace by the namespace where you created the secret.
 You should see an output similar to:
 
@@ -249,7 +250,7 @@ You will create an Azure Key Vault and add a secret to store redis password.
 **Task Hints**
 
 * It's recommended to use az cli  and the `az keyvault create` command to create a Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault create -h` for details.
-* It's recommended to use az cli  and the `az keyvault secret` command to add a secret in Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault secret -h` for details. 
+* It's recommended to use az cli  and the `az keyvault secret` command to add a secret in Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault secret -h` for details.
 * The secret should be named redis-password.
 
 {% collapsible %}
@@ -319,7 +320,7 @@ Apply the deployment:
 kubectl apply -f ./serviceaccount.yaml -n <your_namespace>
 ```
 
-You should see an output similar to: 
+You should see an output similar to:
 
 ```sh
 serviceaccount/votingsa created
@@ -494,7 +495,7 @@ spec:
   - port: 80
   selector:
     app: azure-vote-front
-``` 
+```
 
 {% endcollapsible %}
 
@@ -508,4 +509,3 @@ Test if your application works fine.
 > * <https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster>
 > * <https://learn.microsoft.com/en-us/azure/aks/csi-secrets-store-driver>
 > * <https://learn.microsoft.com/en-us/azure/aks/internal-lb?tabs=set-service-annotations#create-an-internal-load-balancer>
-
