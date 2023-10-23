@@ -99,11 +99,11 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 
 
-
-
 ### Check you deployed application
 
 Connect to your cluster and ensure the deployment is successful. Once done, get the name of the pod.
+
+{% collapsible %}
 
 ```sh
 kubectl get deploy webapp
@@ -116,7 +116,7 @@ NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 webapp            0/1     1            0           16s
 ```
 
-{% endcollapsible %}
+
 
 Use `kubectl get pods` to check if the pod is running. Obtain the name of the created pod.
 
