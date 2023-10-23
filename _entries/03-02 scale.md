@@ -14,7 +14,7 @@ Connect to your cluster and increase the numbers of pods using the command line.
 {% collapsible %}
 
 ```sh
-kubectl scale deployment/nginx-deployment --replicas=5
+kubectl scale deployment/helloworld --replicas=5
 ```
 
 {% endcollapsible %}
@@ -42,7 +42,18 @@ Now, list your pods. How are your pods replicated accross the nodes ? List the p
 {% collapsible %}
 
 ```sh
-kubectl get pods -w
+kubectl get pods -o wide
+```
+
+You should see something like this and you can see that pods are deployed on the different nodes of your cluster.
+
+```sh
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
+helloworld-75d9b9d44c-7f7rh   1/1     Running   0          40s   10.244.0.10   aks-agentpool-14914408-vmss000000   <none>           <none>
+helloworld-75d9b9d44c-ctdrv   1/1     Running   0          40s   10.244.0.11   aks-agentpool-14914408-vmss000000   <none>           <none>
+helloworld-75d9b9d44c-kqmdv   1/1     Running   0          40s   10.244.1.9    aks-agentpool-14914408-vmss000001   <none>           <none>
+helloworld-75d9b9d44c-kw47c   1/1     Running   0          40s   10.244.1.8    aks-agentpool-14914408-vmss000001   <none>           <none>
+helloworld-75d9b9d44c-qjkg2   1/1     Running   0          77m   10.244.1.7    aks-agentpool-14914408-vmss000001   <none>           <none>
 ```
 
 {% endcollapsible %}

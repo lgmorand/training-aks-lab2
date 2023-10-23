@@ -21,7 +21,7 @@ Create a deployment file named **deployment.yaml** which matchs the following re
 
 Create a **deployment.yaml** file with the following contents, and make sure to replace **<registry-fqdn>** with the fully qualified name of your registry:
 
-```` yaml
+```yaml
 # deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -51,7 +51,7 @@ spec:
           env:
             - name: GREETEE
               value: AKS
-````
+```
 
 {% endcollapsible %}
 
@@ -77,13 +77,13 @@ The cleanest way is to create a service connection which will be injectected in 
 
 > Note If your company does not use Rancher, the simplest way to get your kubeconfig file is to use the az aks get-credentials command and reuse the generated kubeconfig file
 
-```` cli
+```cli
     # login to azure
     az login
     
     # login to the AKS cluster
     az aks get-credentials -n <cluster_name> -g <cluster_resource_group_name>
-````
+```
 
 To create a Service Connection, in the settings of your Azure DevOps project and click on "Service connections"
 
@@ -97,10 +97,7 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 ### Add deployment steps in your pipeline
 
-
-
-
-
+Add steps to you pipeline to use the kubectl command in addition of your kubeconfig file. If you created a service connection, you can use the **KubernetesManifest** task.
 
 {% collapsible %}
 
@@ -123,11 +120,19 @@ steps:
 
 {% endcollapsible %}
 
+When it's done. Run your deployment pipeline.
+
 ### Check you deployed application
 
-Connect to your cluster and ensure the deployment is successful. Once done, get the name of the pod.
+Connect to your cluster and ensure the deployment is successful. Once done, get the name of the pod. Do it using the Azure Web portal but also using a command line (your computer or the Cloud Shell)
 
 {% collapsible %}
+
+Using the Web portal
+
+![Using the Web portal](../media/check-deployment.png)
+
+Using a shell
 
 ```sh
 kubectl get deploy helloworld
@@ -137,7 +142,7 @@ You should see an output similar to:
 
 ```sh
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
-helloworld            0/1     1            0           16s
+helloworld            1/1     1            1           16s
 ```
 
 Use `kubectl get pods` to check if the pod is running. Obtain the name of the created pod.
@@ -154,3 +159,5 @@ helloworld-7c58c5f699-r79mv            1/1     Running   0          63s
 ```
 
 {% endcollapsible %}
+
+Easy isn't it ?
