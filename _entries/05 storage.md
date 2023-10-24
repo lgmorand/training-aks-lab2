@@ -6,4 +6,4 @@ is-parent: yes
 ---
 
 
-A FINIR et renommer le .bak en .md
+A FINIR 
