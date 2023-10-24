@@ -12,31 +12,22 @@ Our scaling configuration is ready but it's now time to test it. There are plent
 **Using Azure Load Testing**
 {% collapsible %}
 
+In the Azure Portal, navigate to your shared resource group and click on your Azure Load Testing resource.
 
-> In the Azure Portal, navigate to your shared resource group and click on your Azure Load Testing resource.
-> Click the **Quick test** button to create a new test. In the **Quick test** blade, enter your ingress IP as the URL. 
-> 
-> Set the number of virtual users to **250**, test duration to **240** seconds, and the ramp up time of **60**.
-> 
-> Click the **Run test** button to start the test.
-
-
-
-> If you are familiar with creating JMeter tests, you can also create a JMeter test file and upload it to Azure Load Testing.
+- Click the **Quick test** button to create a new test. In the **Quick test** blade, enter your ingress IP as the URL.
+- Set the number of virtual users to **250**, test duration to **240** seconds, and the ramp up time of **60**.
+- Click the **Run test** button to start the test.
+- If you are familiar with creating JMeter tests, you can also create a JMeter test file and upload it to Azure Load Testing.
 
 ![Azure Load Testing](assets/load-test-setup.png)
 
-
-> As the test is running, run the following command to watch the deployment scale.
-
+As the test is running, run the following command to watch the deployment scale.
 
 ```bash
 kubectl get deployment azure-voting-app -w
 ```
 
-
-> In a different terminal tab, you can also run the following command to watch the Horizontal Pod Autoscaler reporting metrics as well.
-
+In a different terminal tab, you can also run the following command to watch the Horizontal Pod Autoscaler reporting metrics as well.
 
 ```bash
 kubectl get hpa -w
@@ -52,4 +43,3 @@ In addition to viewing your application metrics from the Azure Load Testing serv
 
 {% collapsible %}
 {% endcollapsible %}
-
