@@ -214,7 +214,7 @@ Test your app in your browser: [http://EXTERNAL-IP-FRONT](http://EXTERNAL-IP-FRO
 Kubernetes secrets are just base64 encoded strings. Anyone with access to the cluster can decode them and see the actual value. Run the following command to decode the password secret:
 
 ```sh
-kubectl get secrets <azure-voting-redis-secret> -o jsonpath='{.data.password}' | base64 --decode
+kubectl get secrets <azure-voting-redis-secret> -o jsonpath='{.data.password}' -n <your-namespace> | base64 --decode
 ```
 
 There are a few ways to store secrets in a more secure manner. One recommended way is to use Azure Key Vault.

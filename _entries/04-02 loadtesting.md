@@ -9,7 +9,8 @@ Our scaling configuration is ready but it's now time to test it. There are plent
 
 > Important: if your applications are privatly exposed you may need advanced configuration which require additional rights. In case you don't have these rights, we recommend to use [a simple Ubuntu docker image](https://hub.docker.com/r/centminmod/docker-ubuntu-nghttp2-minimal) which contained load testing tool such as h2load or a simpler alternative, to use a docker image containing [vegeta](https://github.com/peter-evans/vegeta-docker).
 
-**Using Azure Load Testing**
+#### Using Azure Load Testing
+
 {% collapsible %}
 
 In the Azure Portal, navigate to your shared resource group and click on your Azure Load Testing resource.
@@ -47,7 +48,7 @@ In addition to viewing your application metrics from the Azure Load Testing serv
 
 {% endcollapsible %}
 
-**Using vegeta**
+#### Using vegeta
 
 If you are using [vegeta](https://github.com/peter-evans/vegeta-docker), deploy it within the cluster and do it using command line only. It's a temporary tool so we don't need to put it in your code repository.
 
@@ -84,3 +85,6 @@ keda-hpa-helloworld-scaledobject   Deployment/helloworld   762%/50%    1        
 ```
 
 {% endcollapsible %}
+
+Now you can imagine scaling any based based on any metric, number of HTTP requests, number of files in a blog, messages in a queue, etc.
+Autoscaling is critical for the resiliency of your app.
