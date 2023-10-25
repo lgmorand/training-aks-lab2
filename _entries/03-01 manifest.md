@@ -61,9 +61,18 @@ To deploy an application within a cluster, you need to authenticate as a user wh
 
 In your case, authorization is managed by Rancher. You must get your credentials using the Rancher portal and download your *kubeconfig* file.
 
-**INSERER SCREENSHOTS de PIERRE**
+{% collapsible %}
+Connect to your Rancher portal and select the right cluster
 
-Once your retrieved your kubeconfig file, you must use it in the pipeline in order to be able to connect to the cluster.
+![Select your cluster](../media/rancher-clusters.png)
+
+Then download your kubeconfig file which contains your credentials to connect against the cluster.
+
+![Download kubeconfig](../media/rancher-kubeconfig.png)
+
+{% endcollapsible %}
+
+Once you retrieved your kubeconfig file, you must use it in the pipeline in order to be able to connect to the cluster.
 
 You can reuse it in your pipeline in different ways, some are better than others. Think and choose wisely:
 
