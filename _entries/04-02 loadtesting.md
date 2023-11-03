@@ -20,12 +20,14 @@ You may need to find the internal IP to reach your application (or create a clus
 
 {% collapsible %}
 
-The following command:
+Look at the documentation on the GitHub page
 
-- creates a pod (because restart=Never, else it would be a deployment)
-- using the image peterevans/vegeta
-- and pass it a starting command which:
-  - uses the /tic endpoint
+The second command:
+
+- creates a single pod (because of restart=Never, without it, it would create a deployment)
+- using the image *peterevans/vegeta*
+- and pass a starting command which:
+  - uses the /tic endpoint (see source code of helloworld app)
   - from the IP of your pod
   - start loadtesting during 60 seconds
   - with 1000 requests per second
@@ -33,7 +35,7 @@ The following command:
 
 ```bash
 kubectl run vegeta --rm --attach --restart=Never --image="peterevans/vegeta" -- sh -c \
-"echo 'GET http://10.244.0.25/tic' | vegeta attack -rate=1000 -duration=60s | tee results.bin | vegeta report"
+"echo 'GET http://<yourpod-ip>/tic' | vegeta attack -rate=1000 -duration=60s | tee results.bin | vegeta report"
 ```
 
 As soon as you run it, in another shell (or in the Web portal) you should see your deployment helloworld to scale out.
