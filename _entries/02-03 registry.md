@@ -9,11 +9,13 @@ parent-id: build
 
 To deploy a docker image, you first need to publish it a container registry. On Azure, the solution is Azure Container Registry but you may also decide to use an alternative such as [Harbor](https://goharbor.io).
 
-Add steps to your pipeline to [push your images](https://goharbor.io/docs/1.10/working-with-projects/working-with-images/pulling-pushing-images/) to your registry
+Add steps to your pipeline to [push your images](https://goharbor.io/docs/1.10/working-with-projects/working-with-images/pulling-pushing-images/) to your registry (registry.gems.myengie.com)
 
 {% collapsible %}
 
 ``` bash
+docker login <url-registry>
+
 docker tag <image-name>[:TAG] <container-registry-IP>/<project-name>/<image-name>[:TAG]
 
 docker push <container-registry-IP>/<namespace-name>/<image_name>
