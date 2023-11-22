@@ -506,6 +506,16 @@ spec:
 
 Test if your application works fine.
 
+##### How to use workload identity in your code?
+
+Microsoft Entra Workload ID works especially well with the Azure Identity client libraries and the Microsoft Authentication Library (MSAL) collection if you're using application registration. Your workload can use any of these libraries to seamlessly authenticate and access Azure cloud resources.
+
+You can find more information in [Microsoft documentation](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview?tabs=dotnet).
+* [Azure Identity Client libraries samples](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview?tabs=dotnet#azure-identity-client-libraries)
+* [MSAL samples](https://learn.microsoft.com/en-us/azure/aks/workload-identity-overview?tabs=dotnet#microsoft-authentication-library-msal)
+* [MSAL sample in .net with Azure Key Vault](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-net/akvdotnet)
+* [Tutorial - Use a workload identity with an application on Azure Kubernetes Service (AKS)](https://learn.microsoft.com/en-us/azure/aks/learn/tutorial-kubernetes-workload-identity)
+
 > **Resources**
 >
 > * <https://kubernetes.io/docs/concepts/configuration/secret/>
