@@ -7,7 +7,9 @@ parent-id: build
 
 #### Get the `webapp` source code
 
-Download the `webapp` from the Github repository: [hello-world.zip](https://stoakslab2.z6.web.core.windows.net/source/hello-world.zip). If you are using the Cloud Shell you can either download and upload the files, or you can use *[wget](https://doc.ubuntu-fr.org/wget)* and *[unzip](https://doc.ubuntu-fr.org/zip)* commands.
+Download the `webapp` from the Github repository: [hello-world.zip](https://stoakslab2.z6.web.core.windows.net/source/hello-world.zip). If you are using the Cloud Shell you can either download and upload the files, or you can use *[wget](https://doc.ubuntu-fr.org/wget)* and *[unzip](https://doc.ubuntu-fr.org/zip)* commands. 
+
+> Warning: position yourself in nodejs folder, before running commands
 
 {% collapsible %}
 
