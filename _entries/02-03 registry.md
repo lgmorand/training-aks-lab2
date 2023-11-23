@@ -13,6 +13,16 @@ Add steps to your pipeline to [push your images](https://goharbor.io/docs/1.10/w
 
 {% collapsible %}
 
+With Podman
+
+``` bash
+podman push --creds='$(REGISTRY_CREDS)' $(REGISTRY)/gems-training/studentXXX-$(BUILD_ID)
+```
+
+
+
+With Docker
+
 ``` bash
 docker login <url-registry>
 
@@ -20,6 +30,7 @@ docker tag <image-name>[:TAG] <container-registry-IP>/<project-name>/<image-name
 
 docker push <container-registry-IP>/<namespace-name>/<image_name>
 ```
+
 
 {% endcollapsible %}
 
