@@ -53,7 +53,7 @@ spec:
           env:
             - name: GREETEE
               value: AKS
-       imagePullSecrets:
+       imagePullSecrets: # credentials to connect to your registry
        - name: harbor-pull
 ```
 
@@ -115,9 +115,7 @@ Add steps to you pipeline to use the kubectl command in addition of your kubecon
 {% collapsible %}
 
 ```yaml
-
-pool:
-  vmImage: ubuntu-latest
+pool: <name-of-your-agent-pool>
 
 steps:
 - script: ls
@@ -127,6 +125,22 @@ steps:
     connectionType: 'kubernetesServiceConnection'
     kubernetesServiceConnection: 'aks-test'
     manifests: './nodejs/deployment.yaml'
+```
+
+{% endcollapsible %}
+
+> Warning: Your container image is in a secured containers registry (harbor). Kubernetes does not know how to connect to it. You need to provide credentials to kubernetes, for it to be able to pull your image. It is the [image-pull secret property](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). You need to create this secret in your namespace.
+
+{% collapsible %}
+
+Open a shell connected to your cluster
+
+```bash
+kubectl create secret docker-registry harbor-pull `
+                      --docker-server=registry.gems.myengie.com `
+                      --docker-username=<user> `
+                      --docker-password=<password> `
+                      -n your-namespace
 ```
 
 {% endcollapsible %}
