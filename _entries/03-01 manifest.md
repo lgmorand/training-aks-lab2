@@ -115,8 +115,6 @@ Add steps to you pipeline to use the kubectl command in addition of your kubecon
 {% collapsible %}
 
 ```yaml
-trigger:
-- main
 
 pool:
   vmImage: ubuntu-latest
