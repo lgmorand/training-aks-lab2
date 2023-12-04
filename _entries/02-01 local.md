@@ -46,7 +46,7 @@ RUN npm ci
 COPY . .
 
 # Start the app
-EXPOSE 80
+EXPOSE 3000
 CMD [ "node", "server.js" ]
 ```
 
