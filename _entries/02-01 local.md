@@ -14,7 +14,7 @@ Download the `webapp` from the Github repository: [hello-world.zip](https://stoa
 {% collapsible %}
 
 ```sh
-wget -O hello-world.zip https://stoakslab2.z6.web.core.windows.net/source/hello-world.zip
+wget -O hello-world.zip https://stoakslab22.z6.web.core.windows.net/source/hello-world.zip
 unzip hello-world.zip
 cd hello-world
 cd nodejs
