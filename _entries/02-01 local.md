@@ -17,7 +17,6 @@ Download the `webapp` from the Github repository: [hello-world.zip](https://stoa
 wget -O hello-world.zip https://stoakslab22.z6.web.core.windows.net/source/hello-world.zip
 unzip hello-world.zip
 cd hello-world
-cd nodejs
 ```
 
 {% endcollapsible %}
@@ -73,7 +72,7 @@ Use `docker run` to start a new container from the image you have just created. 
 
 ```sh
 # Use the port 9000 to serve the app
-docker run -it -p 9000:80 helloworld
+docker run -it -p 9000:3000 helloworld
 ```
 
 {% endcollapsible %}
