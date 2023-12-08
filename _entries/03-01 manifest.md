@@ -17,11 +17,12 @@ Create a deployment file named **deployment.yaml** which matchs the following re
 - set the environment variable GREETEE to AKS
 - set requests with CPU = 100m and Memory = 128Mi
 
+> **Security**: you harbor registry may require credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
+
+
 {% collapsible %}
 
 Create a **deployment.yaml** file with the following contents, and make sure to replace **<registry-fqdn>** with the fully qualified name of your registry:
-
-> **Security**: you harbor registry may require credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
 
 ```yaml
 # deployment.yaml
@@ -135,13 +136,13 @@ steps:
 
 {% collapsible %}
 
-Open a shell connected to your cluster
+Open a shell connected to your cluster and run the command. Don't forget to put quotes around username and password. Sometimes, depending on your shell, some chars may be removed without the quotes
 
 ```bash
 kubectl create secret docker-registry harbor-pull `
                       --docker-server=registry.gems.myengie.com `
-                      --docker-username=<user> `
-                      --docker-password=<password> `
+                      --docker-username="<user>" `
+                      --docker-password="<password>" `
                       -n your-namespace
 ```
 
