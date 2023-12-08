@@ -66,7 +66,7 @@ In the Azure Portal, navigate to your shared resource group and click on your Az
 - Click the **Run test** button to start the test.
 - If you are familiar with creating JMeter tests, you can also create a JMeter test file and upload it to Azure Load Testing.
 
-![Azure Load Testing](media/quickstart-test-virtual-users.png)
+![Azure Load Testing](../media/quickstart-test-virtual-users.png)
 
 As the test is running, run the following command to watch the deployment scale.
 
