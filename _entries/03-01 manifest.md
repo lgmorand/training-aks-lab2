@@ -21,7 +21,7 @@ Create a deployment file named **deployment.yaml** which matchs the following re
 
 Create a **deployment.yaml** file with the following contents, and make sure to replace **<registry-fqdn>** with the fully qualified name of your registry:
 
-> **Security**: you harbor registry may require credentials to access it (see [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
+> **Security**: you harbor registry may require credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
 
 ```yaml
 # deployment.yaml
