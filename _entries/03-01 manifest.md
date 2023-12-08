@@ -48,7 +48,7 @@ spec:
               cpu: 100m
               memory: 128Mi
           ports:
-            - containerPort: 80
+            - containerPort: 3000
               name: http
           env:
             - name: GREETEE
