@@ -47,7 +47,7 @@ managed-premium         disk.csi.azure.com   Delete          WaitForFirstConsume
 
 {% endcollapsible %}
 
-Now it's time to create a PVC. Make it using a storage class related to AzureFile, which allow to read and write and request 1Go of storage. Don't hesitate to take a look at [the documentation](https://learn.microsoft.com/en-us/azure/aks/concepts-storage).
+Now it's time to create a PVC. Make it using a storage class related to a managed disk, which allow to read and write and request 1Go of storage. Don't hesitate to take a look at [the documentation](https://learn.microsoft.com/en-us/azure/aks/concepts-storage).
 
 {% collapsible %}
 
@@ -55,11 +55,11 @@ Now it's time to create a PVC. Make it using a storage class related to AzureFil
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: azure-file
+  name: managed-csi
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: azurefile-csi
+  storageClassName: managed-csi 
   resources:
     requests:
       storage: 1Gi
@@ -88,7 +88,7 @@ spec:
   volumes:
     - name: volume
       persistentVolumeClaim:
-        claimName: azure-file
+        claimName: managed-csi
 ```
 
 Deploy you pod. It may takes more time to start up because it needs to provision a storage account first and do some magical to map it to your pod.
