@@ -106,6 +106,8 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 ![Kubernetes service connections](../media/add-service-connection-2.png)
 
+> Warning: If you have an error with Token validation something, it means that your account does not have enough rights to create a service connection.
+
 {% endcollapsible %}
 
 ### Add deployment steps in your pipeline
