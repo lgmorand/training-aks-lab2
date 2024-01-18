@@ -36,7 +36,7 @@ Each of them require different tools. To analyse your code, you need a SAST (Sta
 
 You can use any tool of your choice, such as [hadolint](https://kristhecodingunicorn.com/post/k8s_hadolint/) or [other tools](https://github.com/lgmorand/k8s-devSecOps) (we recommend kubeval and checkov) but you need to implement them in your pipeline. You must lint your files (dockerfile and manifest) but also check for vulnerabilities.
 
-> Note: you may have to use more than one tool; Keep in mind that for this lab you may have errors in your files and y
+> Note: you may have to use more than one tool; Keep in mind that for this lab you may have errors in your files and you can ignore them. You must NOT fix all issues, it is just a practice for you for the lab
 
 {% collapsible %}
 
