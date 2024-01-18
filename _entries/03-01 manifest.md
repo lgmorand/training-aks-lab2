@@ -141,8 +141,8 @@ Open a shell connected to your cluster and run the command. Don't forget to put 
 ```bash
 kubectl create secret docker-registry harbor-pull `
                       --docker-server=registry.gems.myengie.com `
-                      --docker-username="<user>" `
-                      --docker-password="<password>" `
+                      --docker-username='<user>' `
+                      --docker-password='<password>' `
                       -n your-namespace
 ```
 
