@@ -29,7 +29,7 @@ jobs:
           cp sample-app/hello-world.zip _site/source/hello-world.zip
           cp sample-app/devsecops.zip _site/source/devsecops.zip
           
-      - uses: azure/CLI@v1
+      - uses: azure/CLI@v2
         name: Deploy
         with:
           azcliversion: 2.53.0
