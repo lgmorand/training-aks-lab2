@@ -127,7 +127,7 @@ steps:
     action: 'deploy'
     connectionType: 'kubernetesServiceConnection'
     kubernetesServiceConnection: 'aks-test'
-    manifests: './nodejs/deployment.yaml'
+    manifests: './deployment.yaml'
 ```
 
 {% endcollapsible %}

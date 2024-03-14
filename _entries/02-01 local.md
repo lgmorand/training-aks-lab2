@@ -9,8 +9,6 @@ parent-id: build
 
 Download the `webapp` from the Github repository: [hello-world.zip](https://stoakslab22.z6.web.core.windows.net/source/hello-world.zip). If you are using the Cloud Shell you can either download and upload the files, or you can use *[wget](https://doc.ubuntu-fr.org/wget)* and *[unzip](https://doc.ubuntu-fr.org/zip)* commands. 
 
-> Warning: position yourself in nodejs folder, before running commands
-
 {% collapsible %}
 
 ```sh
@@ -58,7 +56,7 @@ Use `docker build` to create the image.
 {% collapsible %}
 
 ```sh
-# Run this command in the root of the nodejs directory, where you created a Dockerfile
+# Run this command in the root where you created a Dockerfile
 docker build -t helloworld .
 ```
 
