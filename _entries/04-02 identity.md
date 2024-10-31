@@ -45,7 +45,7 @@ In this section, you will deploy the front web app and the redis backend. Redis 
 
 * You will use an image from bitnami for Redis backend (mcr.microsoft.com/oss/bitnami), tag 6.0.8.
 * You will have to add an env variable named REDIS_PASSWORD that will find the password in AKS secret created before.
-* You will use an image from azuredocs for the web app (mcr.microsoft.com/azuredocs/azure-vote-front), tag v1.
+* You will use an image from azuredocs for the web app (lgmorand/azure-vote-front), tag v1.
 * You will have to add 2 env variables. The first, named REDIS_PWD that will find the password in AKS secret created before and the second named REDIS which is the name of your redis backend container.
 * Create services to expose your pod. The backend will not be called outside of the cluster. The frontend will be called outside of the cluster but only with an internal IP, refer to [Internal Load Balancer](https://learn.microsoft.com/en-us/azure/aks/internal-lb?tabs=set-service-annotations#create-an-internal-load-balancer)
 
@@ -116,7 +116,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
       - name: azure-vote-front
-        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+        image: lgmorand/azure-vote-front:v1
         ports:
         - containerPort: 80
         resources:
