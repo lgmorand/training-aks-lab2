@@ -1,9 +1,18 @@
-name: Build and deploy
+name: Build, create infra & deploy
 
 on:
-  push:
   workflow_dispatch:
-
+    inputs:
+        STORAGE_NAME:
+          description: "Storage name"
+          required: true
+        RESOURCE_GROUP:
+          description: 'Resource groupe Name'     
+          required: true
+        REGION:
+          description: 'Region'     
+          required: true
+          default: "westeurope"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,20 +32,32 @@ jobs:
       - run: make build
         name: Build sources
 
-      - name: adding zip file
+      - name: AZ Login
+        run: az login --service-principal -u ${{ vars.AZ_LOGIN }} -p ${{ secrets.AZ_PASSWORD }} --tenant ${{ vars.AZ_TENANT }}
+
+      - name: Create RG
         run: |
-          mkdir _site/source
-          cp sample-app/hello-world.zip _site/source/hello-world.zip
-          cp sample-app/devsecops.zip _site/source/devsecops.zip
+          az group create -n ${{ github.event.inputs.RESOURCE_GROUP }} -l ${{ github.event.inputs.REGION }} -o none
+          printf $"\e[32m\u2714 Success \e[0m\n\n"
+      - name: Create storage account
+        run: |
+          az storage account create -n ${{ github.event.inputs.STORAGE_NAME }}  -g ${{ github.event.inputs.RESOURCE_GROUP }} --sku Standard_LRS -o none
+          az storage blob service-properties update --account-name ${{ github.event.inputs.STORAGE_NAME }} --static-website --index-document "index.html"
           
+          printf $"\e[32m\u2714 Success \e[0m\n\n"
+        
       - uses: azure/CLI@v2
         name: Deploy
         with:
-          azcliversion: 2.53.0
+          azcliversion: 2.67.0
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
-
+            CONNECTION_STRING=$(az storage account show-connection-string --name ${{ github.event.inputs.STORAGE_NAME }} --resource-group ${{ github.event.inputs.RESOURCE_GROUP }} -o tsv)
+            printf $"\e[32m\u2714 $CONNECTION_STRING \e[0m\n\n"
             az storage azcopy blob sync \
               --container "\$web" \
               --source "_site" \
-              --connection-string "${{ secrets.CONNECTION_STRING }}"
+              --connection-string "$CONNECTION_STRING"
+            URL=$(az storage account show --name ${{ github.event.inputs.STORAGE_NAME }} --resource-group ${{ github.event.inputs.RESOURCE_GROUP }} --query "primaryEndpoints.web" --output tsv)
+            printf $"\e[32m\u2714 $URL \e[0m\n\n"
+            echo "::notice::$URL"
