@@ -7,12 +7,12 @@ parent-id: build
 
 #### Get the `webapp` source code
 
-Download the `webapp` from the Github repository: [hello-world.zip](https://stoengielab2.z6.web.core.windows.net/source/hello-world.zip). If you are using the Cloud Shell you can either download and upload the files, or you can use *[wget](https://doc.ubuntu-fr.org/wget)* and *[unzip](https://doc.ubuntu-fr.org/zip)* commands. 
+Download the `webapp` sample app: [hello-world.zip](__SERVER__sample-app/hello-world.zip). If you are using the Cloud Shell you can either download and upload the files, or you can use *[wget](https://doc.ubuntu-fr.org/wget)* and *[unzip](https://doc.ubuntu-fr.org/zip)* commands. 
 
 {% collapsible %}
 
 ```sh
-wget -O hello-world.zip https://stoengielab2.z6.web.core.windows.net/source/hello-world.zip
+wget -O hello-world.zip __SERVER__sample-app/hello-world.zip
 unzip hello-world.zip
 cd hello-world
 ```

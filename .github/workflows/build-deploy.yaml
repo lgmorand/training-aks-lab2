@@ -21,6 +21,27 @@ jobs:
       - uses: actions/checkout@v4
         name: Checkout sources
 
+      - name: AZ Login
+        run: az login --service-principal -u ${{ vars.AZ_LOGIN }} -p ${{ secrets.AZ_PASSWORD }} --tenant ${{ vars.AZ_TENANT }}
+
+      - name: Create RG
+        run: |
+          az group create -n ${{ github.event.inputs.RESOURCE_GROUP }} -l ${{ github.event.inputs.REGION }} -o none --only-show-errors
+          printf $"\e[32m\u2714 Success \e[0m\n\n"
+      - name: Create storage account
+        run: |
+          az storage account create -n ${{ github.event.inputs.STORAGE_NAME }}  -g ${{ github.event.inputs.RESOURCE_GROUP }} --sku Standard_LRS -o none --only-show-errors
+          az storage blob service-properties update --account-name ${{ github.event.inputs.STORAGE_NAME }} --static-website --index-document "index.html" -o none --only-show-errors
+          
+          printf $"\e[32m\u2714 Success \e[0m\n\n"
+        
+          URL=$(az storage account show --name ${{ github.event.inputs.STORAGE_NAME }} --resource-group ${{ github.event.inputs.RESOURCE_GROUP }} --query "primaryEndpoints.web" --output tsv)
+          printf $"\e[32m\u2714 $URL \e[0m\n\n"
+          echo "::notice::$URL"
+
+          echo "replace URL in lab"
+          sed -i "s#__SERVER__#$URL#g" "_entries/02-01 local.md"
+
       - uses: ruby/setup-ruby@v1
         name: Set up Ruby
         with:
@@ -31,20 +52,6 @@ jobs:
 
       - run: make build
         name: Build sources
-
-      - name: AZ Login
-        run: az login --service-principal -u ${{ vars.AZ_LOGIN }} -p ${{ secrets.AZ_PASSWORD }} --tenant ${{ vars.AZ_TENANT }}
-
-      - name: Create RG
-        run: |
-          az group create -n ${{ github.event.inputs.RESOURCE_GROUP }} -l ${{ github.event.inputs.REGION }} -o none
-          printf $"\e[32m\u2714 Success \e[0m\n\n"
-      - name: Create storage account
-        run: |
-          az storage account create -n ${{ github.event.inputs.STORAGE_NAME }}  -g ${{ github.event.inputs.RESOURCE_GROUP }} --sku Standard_LRS -o none
-          az storage blob service-properties update --account-name ${{ github.event.inputs.STORAGE_NAME }} --static-website --index-document "index.html"
-          
-          printf $"\e[32m\u2714 Success \e[0m\n\n"
         
       - uses: azure/CLI@v2
         name: Deploy
@@ -58,6 +65,4 @@ jobs:
               --container "\$web" \
               --source "_site" \
               --connection-string "$CONNECTION_STRING"
-            URL=$(az storage account show --name ${{ github.event.inputs.STORAGE_NAME }} --resource-group ${{ github.event.inputs.RESOURCE_GROUP }} --query "primaryEndpoints.web" --output tsv)
-            printf $"\e[32m\u2714 $URL \e[0m\n\n"
-            echo "::notice::$URL"
+            
