@@ -37,12 +37,12 @@ jobs:
 
       - name: Create RG
         run: |
-          az group create -n ${{ github.event.inputs.RESOURCE_GROUP }} -l ${{ github.event.inputs.REGION }} -o none
+          az group create -n ${{ github.event.inputs.RESOURCE_GROUP }} -l ${{ github.event.inputs.REGION }} -o none --only-show-errors
           printf $"\e[32m\u2714 Success \e[0m\n\n"
       - name: Create storage account
         run: |
-          az storage account create -n ${{ github.event.inputs.STORAGE_NAME }}  -g ${{ github.event.inputs.RESOURCE_GROUP }} --sku Standard_LRS -o none
-          az storage blob service-properties update --account-name ${{ github.event.inputs.STORAGE_NAME }} --static-website --index-document "index.html"
+          az storage account create -n ${{ github.event.inputs.STORAGE_NAME }}  -g ${{ github.event.inputs.RESOURCE_GROUP }} --sku Standard_LRS -o none --only-show-errors
+          az storage blob service-properties update --account-name ${{ github.event.inputs.STORAGE_NAME }} --static-website --index-document "index.html" -o none --only-show-errors
           
           printf $"\e[32m\u2714 Success \e[0m\n\n"
         
@@ -51,7 +51,7 @@ jobs:
           echo "::notice::$URL"
 
           echo "replace URL in lab"
-          sed -i "s#__SERVER__#$URL#g" "_entries/02-01 local.md"$URL
+          sed -i "s#__SERVER__#$URL#g" "_entries/02-01 local.md"
 
       - uses: azure/CLI@v2
         name: Deploy
