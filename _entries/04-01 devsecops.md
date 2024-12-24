@@ -84,6 +84,6 @@ steps:
 
 {% endcollapsible %}
 
-Ideally you should also add a tool to scan for vulnerabilities in your docker base image. If your files did not trigger any error/warning, you can [import the following files](https://stoakslab2.z6.web.core.windows.net/source/devsecops.zip) in your repo and do a quick test.
+Ideally you should also add a tool to scan for vulnerabilities in your docker base image. If your files did not trigger any error/warning, you can [import the following files](__SERVER__sample-app/devsecops.zip) in your repo and do a quick test.
 
 > Important: you don't need to fix all errors to continue the workshop. The idea is just for you to take the habit of scanning your files.
