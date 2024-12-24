@@ -51,7 +51,7 @@ jobs:
           echo "::notice::$URL"
 
           echo "replace URL in lab"
-          sed -i "s/__SERVER__/$URL/g" "_entries/02-01 local.md"
+          sed -i "s#__SERVER__#$URL#g" "_entries/02-01 local.md"$URL
 
       - uses: azure/CLI@v2
         name: Deploy
