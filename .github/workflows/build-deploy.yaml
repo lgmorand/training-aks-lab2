@@ -46,6 +46,13 @@ jobs:
           
           printf $"\e[32m\u2714 Success \e[0m\n\n"
         
+          URL=$(az storage account show --name ${{ github.event.inputs.STORAGE_NAME }} --resource-group ${{ github.event.inputs.RESOURCE_GROUP }} --query "primaryEndpoints.web" --output tsv)
+          printf $"\e[32m\u2714 $URL \e[0m\n\n"
+          echo "::notice::$URL"
+
+          echo "replace URL in lab"
+          sed -i "s/__SERVER__/$URL/g" "_entries/02-01 local.md"
+
       - uses: azure/CLI@v2
         name: Deploy
         with:
@@ -58,6 +65,4 @@ jobs:
               --container "\$web" \
               --source "_site" \
               --connection-string "$CONNECTION_STRING"
-            URL=$(az storage account show --name ${{ github.event.inputs.STORAGE_NAME }} --resource-group ${{ github.event.inputs.RESOURCE_GROUP }} --query "primaryEndpoints.web" --output tsv)
-            printf $"\e[32m\u2714 $URL \e[0m\n\n"
-            echo "::notice::$URL"
+            
