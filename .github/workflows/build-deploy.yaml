@@ -21,17 +21,6 @@ jobs:
       - uses: actions/checkout@v4
         name: Checkout sources
 
-      - uses: ruby/setup-ruby@v1
-        name: Set up Ruby
-        with:
-          ruby-version: "3.3.0"
-
-      - run: make upgrade install
-        name: Set up build dependencies
-
-      - run: make build
-        name: Build sources
-
       - name: AZ Login
         run: az login --service-principal -u ${{ vars.AZ_LOGIN }} -p ${{ secrets.AZ_PASSWORD }} --tenant ${{ vars.AZ_TENANT }}
 
@@ -53,6 +42,17 @@ jobs:
           echo "replace URL in lab"
           sed -i "s#__SERVER__#$URL#g" "_entries/02-01 local.md"
 
+      - uses: ruby/setup-ruby@v1
+        name: Set up Ruby
+        with:
+          ruby-version: "3.3.0"
+
+      - run: make upgrade install
+        name: Set up build dependencies
+
+      - run: make build
+        name: Build sources
+        
       - uses: azure/CLI@v2
         name: Deploy
         with:
