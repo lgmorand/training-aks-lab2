@@ -5,9 +5,11 @@ RANDOM_ID=$RANDOM
 RG_NAME="rg_"$YOUR_COMPANY_NAME
 AKS_NAME="aks_"$YOUR_COMPANY_NAME
 ACR_NAME="acr"$YOUR_COMPANY_NAME""$RANDOM_ID
+KV_NAME="kv_"$YOUR_COMPANY_NAME""$RANDOM_ID
 MIN_NODE_COUNT="2"
 MAX_NODE_COUNT="3"
 GREEN="\e[32m"
+RED="\e[31m"
 ENDCOLOR="\e[0m" 
 
 
@@ -33,6 +35,11 @@ echo "attaching the ACR"
 az aks update --name $AKS_NAME --resource-group $RG_NAME --attach-acr $ACR_NAME -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
+# Create Keyvault
+echo "create Keyvault"
+az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME 
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
+
 
 az aks get-credentials -n $AKS_NAME -g $RG_NAME --file kubeconfig.txt #we just want a clean extract
 az aks get-credentials -n $AKS_NAME -g $RG_NAME
@@ -56,3 +63,19 @@ kubectl create ns student14
 kubectl create ns student15
 kubectl get ns
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
+
+# Create an SPN and role assignments
+az ad sp create-for-rbac --name spn-labaks > spncredentials.txt
+printf $"${RED}\u2714 Credentials are in spncredentials.txt ${ENDCOLOR}\n\n"
+
+echo "add assignment to ACR"
+SCOPE=$(az acr show -n $ACR_NAME -g $RG_NAME --query id -o tsv)
+az role assignment create --assignee sp_name --role Contributor --scope 
+
+echo "add assignment to AKS"
+SCOPE=$(az aks show -n $AKS_NAME -g $RG_NAME --query id -o tsv)
+az role assignment create --assignee sp_name --role Contributor --scope 
+
+echo "add assignment to KV"
+SCOPE=$(az keyvault show -n $KV_NAME -g $RG_NAME --query id -o tsv)
+az role assignment create --assignee sp_name --role Contributor --scope 
