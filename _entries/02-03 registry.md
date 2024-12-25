@@ -7,16 +7,16 @@ parent-id: build
 
 #### Publish your container image
 
-To deploy a docker image, you first need to publish it a container registry. On Azure, the solution is Azure Container Registry but you may also decide to use an alternative such as [Harbor](https://goharbor.io).
+To deploy a docker image, you first need to publish it a container registry. On Azure, the solution is Azure Container Registry but you may also decide to use an alternative such as [Harbor](https://goharbor.io) or [Artifactory](https://jfrog.com/fr/artifactory/).
 
-Add steps to your pipeline to [push your images](https://goharbor.io/docs/1.10/working-with-projects/working-with-images/pulling-pushing-images/) to your registry (registry.gems.myengie.com)
+Add steps to your pipeline to push your images to your registry.
 
 {% collapsible %}
 
 With Podman
 
 ``` bash
-podman push --creds='$(REGISTRY_CREDS)' $(REGISTRY)/gems-training/studentXXX-$(BUILD_ID)
+podman push --creds='$(REGISTRY_CREDS)' $(REGISTRY)/aks-training/studentXXX-$(BUILD_ID)
 ```
 
 
