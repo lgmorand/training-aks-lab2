@@ -56,7 +56,7 @@ spec:
 
 {% endcollapsible %}
 
-> **Security**: you container registry (if not an Azure Container Registry) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
+> **Security**: you container registry (**if not an Azure Container Registry**) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
 
 {% collapsible %}
 
@@ -113,7 +113,7 @@ You can reuse it in your pipeline in different ways, some are better than others
 
 The cleanest way is to create a service connection which will be injectected in your pipeline.
 
-> Note If your company does not use Rancher, the simplest way to get your kubeconfig file is to use the az aks get-credentials command and reuse the generated kubeconfig file
+> Note: the simplest way to get your kubeconfig file is to use the az aks get-credentials command and reuse the generated kubeconfig file
 
 ```cli
     # login to azure
@@ -150,7 +150,8 @@ steps:
   inputs:
     action: 'deploy'
     connectionType: 'kubernetesServiceConnection'
-    kubernetesServiceConnection: 'aks-test'
+    kubernetesServiceConnection: 'name-of-service-connection'
+    namespace: 'studentXXX'
     manifests: './deployment.yaml'
 ```
 

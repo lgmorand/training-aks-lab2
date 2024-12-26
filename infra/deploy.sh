@@ -6,6 +6,7 @@ RG_NAME="rg_"$YOUR_COMPANY_NAME
 AKS_NAME="aks-"$YOUR_COMPANY_NAME
 ACR_NAME="acr"$YOUR_COMPANY_NAME""$RANDOM_ID
 KV_NAME="kv"$YOUR_COMPANY_NAME""$RANDOM_ID
+IDENTITY_NAME=$YOUR_COMPANY_NAME"-identity"
 MIN_NODE_COUNT="2"
 MAX_NODE_COUNT="3"
 SPN_NAME="spn-labaks"
@@ -33,7 +34,9 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create AKS
 echo "creating the AKS cluster"
-az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --generate-ssh-keys --min-count 3 --max-count 7 -o none
+az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --enable-keda --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys --min-count 3 --max-count 7 -o none
+AKS_OIDC_ISSUER="$(az aks show --resource-group <rg> --name <aks_cluster_name> --query "oidcIssuerProfile.issuerUrl" -o tsv)"
+echo $AKS_OIDC_ISSUER > aksoidc.txt
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 echo "attaching the ACR"
@@ -73,19 +76,26 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 az ad sp create-for-rbac --name $SPN_NAME > spncredentials.txt
 SPN_ID=$(az ad sp list --display-name $SPN_NAME  --query "[0].id" -o tsv)
 
-
 echo "add assignment to ACR"
 ACRID=$(az acr show -n $ACR_NAME -g $RG_NAME --query id -o tsv)
-az role assignment create --assignee $SPN_ID --role Contributor --scope $ACRID
+az role assignment create --assignee $SPN_ID --role Contributor --scope $ACRID -o none
 
 echo "add assignment to AKS"
 AKSID=$(az aks show -n $AKS_NAME -g $RG_NAME --query id -o tsv)
-az role assignment create --assignee $SPN_ID --role Contributor --scope $AKSID
+az role assignment create --assignee $SPN_ID --role Contributor --scope $AKSID -o none
 
 echo "add assignment to KV"
 KVID=$(az keyvault show -n $KV_NAME -g $RG_NAME --query id -o tsv)
-az role assignment create --assignee $SPN_ID --role Contributor --scope $KVID
+az role assignment create --assignee $SPN_ID --role Contributor --scope $KVID -o none
+
+# prepare workload identity
+az identity create --name $IDENTITY_NAME --resource-group $RG_NAME --location $LOCATION -o none
+IDENTITY_ID=$(az ad sp list --display-name $IDENTITY_NAME  --query "[0].id" -o tsv)
+USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query 'clientId' -o tsv)"
+echo $USER_ASSIGNED_CLIENT_ID
+az keyvault set-policy --name $KV_NAME --secret-permissions get --spn "$IDENTITY_ID" -o none
 
 
 printf $"${RED}\u2714 Credentials for SPN are in spncredentials.txt ${ENDCOLOR}\n\n"
 printf $"${RED}\u2714 Credentials for Docker Registry are in acrcredentials.txt ${ENDCOLOR}\n\n"
+printf $"${RED}\u2714 AKS OIDC URL is in aksoidc.txt ${ENDCOLOR}\n\n"

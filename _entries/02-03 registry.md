@@ -23,7 +23,7 @@ With the **Azure DevOps Docker** task
         repository: 'studentXXX' # your student name
         command: 'buildAndPush' # build AND push
         Dockerfile: $(Build.SourcesDirectory)/dockerfile
-        tags: '$(tag)'
+        tags: 'helloworld-$(tag)'
 ```
 
 To create the service connection, go in your Azure DevOps project settings and add a **Docker Registry** service connection. Normally we would use a Azure Container Registry with a service principal, but for simplification, we are going to connect using Docker credentials (provided by your trainer)

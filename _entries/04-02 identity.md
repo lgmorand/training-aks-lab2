@@ -332,11 +332,6 @@ Get the AKS cluster OIDC Issuer URL using the az aks show command.
 export AKS_OIDC_ISSUER="$(az aks show --resource-group <rg> --name <aks_cluster_name> --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 echo $AKS_OIDC_ISSUER
 ```
-If you don't have the permission to retrieve OIDC issuer, you can set directly the env variable to the following OIDC issuer (this is the one for your AKS cluster):
-
-```sh
-export AKS_OIDC_ISSUER="https://westeurope.oic.prod-aks.azure.com/24139d14-c62c-4c47-8bdd-ce71ea1d50cf/56645ad4-3e3c-43d8-950d-66039bdaeb6b/"
-```
 
 Create the federated identity credential between the managed identity, service account issuer, and subject using the az identity federated-credential create command.
 
