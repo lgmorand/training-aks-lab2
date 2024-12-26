@@ -54,6 +54,43 @@ spec:
           env:
             - name: GREETEE
               value: AKS
+```
+
+{% endcollapsible %}
+
+> Warning: If your container image is in a secured containers registry (harbor) which is not an ACR (Azure Container Registry) then Kubernetes does not know how to connect to it. You need to provide credentials to kubernetes, for it to be able to pull your image. It is the [image-pull secret property](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). You need to create this secret in your namespace.
+
+{% collapsible %}
+
+Open a shell connected to your cluster and run the command. Don't forget to put quotes around username and password. Sometimes, depending on your shell, some chars may be removed without the quotes
+
+```bash
+kubectl create secret docker-registry registry-pull `
+                      --docker-server=yourregistry.fqdn `
+                      --docker-username='<user>' `
+                      --docker-password='<password>' `
+                      -n your-namespace
+```
+
+If you are not using an Azure Container Registry, you may have to add credentials to connect to the cluster such as:
+
+```yaml
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: <registry-fqdn>/helloworld:tag # Registry + image name
+          name: helloworld
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: GREETEE
+              value: AKS
        imagePullSecrets: # credentials to connect to your registry. ONLY required if not using an attached Azure Container Registry
        - name: registry-pull
 ```
@@ -128,22 +165,6 @@ steps:
     connectionType: 'kubernetesServiceConnection'
     kubernetesServiceConnection: 'aks-test'
     manifests: './deployment.yaml'
-```
-
-{% endcollapsible %}
-
-> Warning: If your container image is in a secured containers registry (harbor) which is not an ACR (Azure Container Registry) then Kubernetes does not know how to connect to it. You need to provide credentials to kubernetes, for it to be able to pull your image. It is the [image-pull secret property](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). You need to create this secret in your namespace.
-
-{% collapsible %}
-
-Open a shell connected to your cluster and run the command. Don't forget to put quotes around username and password. Sometimes, depending on your shell, some chars may be removed without the quotes
-
-```bash
-kubectl create secret docker-registry registry-pull `
-                      --docker-server=yourregistry.fqdn `
-                      --docker-username='<user>' `
-                      --docker-password='<password>' `
-                      -n your-namespace
 ```
 
 {% endcollapsible %}
