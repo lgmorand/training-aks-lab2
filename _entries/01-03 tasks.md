@@ -19,8 +19,8 @@ In next part, you are going to deploy your application in a running cluster.
 
 ### Security
 
-You will implement some DevSecOps principles by scanning your files and you will how to securely access resources outside of the cluster.
+You will implement some DevSecOps principles by scanning your files and you will learn how to securely access resources outside of the cluster.
 
-### Autoscalling
+### Autoscaling
 
 You will implement autoscaling and simulate high load on your application.

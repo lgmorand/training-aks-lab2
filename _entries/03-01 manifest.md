@@ -137,7 +137,7 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 ### Add deployment steps in your pipeline
 
-Add steps to you pipeline to use the kubectl command in addition of your kubeconfig file. If you created a service connection, you can use the **KubernetesManifest** task.
+Add steps to your pipeline to use the kubectl command in addition of your kubeconfig file. If you created a service connection, you can use the **KubernetesManifest** task.
 
 {% collapsible %}
 
