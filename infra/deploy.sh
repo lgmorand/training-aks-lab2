@@ -2,7 +2,7 @@
 YOUR_COMPANY_NAME='adp' # put your company name in lowercase
 LOCATION='westeurope'
 RANDOM_ID=$RANDOM
-RG_NAME="rg_"$YOUR_COMPANY_NAME
+RG_NAME="rg-"$YOUR_COMPANY_NAME
 AKS_NAME="aks-"$YOUR_COMPANY_NAME
 ACR_NAME="acr"$YOUR_COMPANY_NAME""$RANDOM_ID
 KV_NAME="kv"$YOUR_COMPANY_NAME""$RANDOM_ID
@@ -23,7 +23,7 @@ az group create -n $RG_NAME -l $LOCATION -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create ACR
-echo "creating the ACR"
+echo "Creating the ACR"
 az acr create --resource-group $RG_NAME --name $ACR_NAME --sku Basic --location $LOCATION --admin-enabled true -o none
 echo "login:"$ACR_NAME > acrcredentials.txt
 PWD=$(az acr credential show --name $ACR_NAME  --resource-group $RG_NAME --query passwords[0].value -o tsv)
@@ -33,24 +33,28 @@ echo "URL:"$URL >> acrcredentials.txt
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create AKS
-echo "creating the AKS cluster"
+echo "Creating the AKS cluster"
 az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --enable-keda --enable-oidc-issuer --enable-workload-identity --enable-addons azure-keyvault-secrets-provider --generate-ssh-keys --min-count 3 --max-count 7 -o none
 AKS_OIDC_ISSUER="$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 echo $AKS_OIDC_ISSUER > aksoidc.txt
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
-echo "attaching the ACR"
+echo "Attaching the ACR"
 az aks update --name $AKS_NAME --resource-group $RG_NAME --attach-acr $ACR_NAME -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create Keyvault
-echo "create Keyvault"
+echo "Create Keyvault"
 az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME --enable-rbac-authorization false -o none
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
+
+echo "Add redis-password secret"
+az keyvault secret set --vault-name $KV_NAME --name redis-password --value Microsoft01!
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 
 az aks get-credentials -n $AKS_NAME -g $RG_NAME --file kubeconfig.txt #we just want a clean extract
-az aks get-credentials -n $AKS_NAME -g $RG_NAME
+az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing
 
 # Create namespaces
 echo "creating namespaces"
@@ -89,12 +93,15 @@ KVID=$(az keyvault show -n $KV_NAME -g $RG_NAME --query id -o tsv)
 az role assignment create --assignee $SPN_ID --role Contributor --scope $KVID -o none
 
 # prepare workload identity
+echo "Prepare workload identity"
 az identity create --name $IDENTITY_NAME --resource-group $RG_NAME --location $LOCATION -o none
 IDENTITY_ID=$(az ad sp list --display-name $IDENTITY_NAME  --query "[0].id" -o tsv)
 USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query 'clientId' -o tsv)"
-echo $USER_ASSIGNED_CLIENT_ID
 az keyvault set-policy --name $KV_NAME --secret-permissions get --object-id "$IDENTITY_ID" -o none
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
+
+echo "Prepare federation"
 az identity federated-credential create --name fed-identity1 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student1:my-serviceaccount -o none
 az identity federated-credential create --name fed-identity2 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student2:my-serviceaccount -o none
 az identity federated-credential create --name fed-identity3 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student3:my-serviceaccount -o none
@@ -110,7 +117,26 @@ az identity federated-credential create --name fed-identity12 --identity-name $I
 az identity federated-credential create --name fed-identity13 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student13:my-serviceaccount -o none
 az identity federated-credential create --name fed-identity14 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student14:my-serviceaccount -o none
 az identity federated-credential create --name fed-identity15 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student15:my-serviceaccount -o none
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
-printf $"${RED}\u2714 Credentials for SPN are in spncredentials.txt ${ENDCOLOR}\n\n"
-printf $"${RED}\u2714 Credentials for Docker Registry are in acrcredentials.txt ${ENDCOLOR}\n\n"
-printf $"${RED}\u2714 AKS OIDC URL is in aksoidc.txt ${ENDCOLOR}\n\n"
+printf $"${GREEN}\u2714 Credentials for SPN are in spncredentials.txt ${ENDCOLOR}\n\n"
+printf $"${GREEN}\u2714 Credentials for Docker Registry are in acrcredentials.txt ${ENDCOLOR}\n\n"
+printf $"${GREEN}\u2714 AKS OIDC URL is in aksoidc.txt ${ENDCOLOR}\n\n"
+
+TENANT_ID=$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query tenantId -o tsv)
+
+echo "prepare unique documents for students"
+echo "Registry (required for service connection)" > students.txt
+echo "-------------------------------------------" >> students.txt
+echo "login:"$ACR_NAME >> students.txt
+echo "pwd:"$PWD >> students.txt
+echo "URL:"$URL >> students.txt
+
+echo "" >> students.txt
+echo "Workload identity" >> students.txt
+echo "----------------" >> students.txt
+echo "User assigned identity:"$USER_ASSIGNED_CLIENT_ID >> students.txt
+echo "OIDC Url:"$AKS_OIDC_ISSUER >> students.txt
+echo "Tenant ID:"$TENANT_ID >> students.txt
+
+printf $"${GREEN}\u2714 Info required by students are in students.txt ${ENDCOLOR}\n\n"

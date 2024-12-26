@@ -24,8 +24,7 @@ Create secret
 {% collapsible %}
 
 ```sh
-kubectl create secret generic <azure-voting-redis-secret> \
-  --from-literal=password=<your_password> -n <your_namespace>
+kubectl create secret generic azure-voting-redis-secret --from-literal=password=<your_password> -n <your_namespace>
 ```
 
 Replace azure-voting-redis-secret, your_password by the secret name and redis password of your choice and your_namespace by the namespace where you need to deploy the secret.
@@ -214,7 +213,7 @@ Test your app in your browser: [http://EXTERNAL-IP-FRONT](http://EXTERNAL-IP-FRO
 Kubernetes secrets are just base64 encoded strings. Anyone with access to the cluster can decode them and see the actual value. Run the following command to decode the password secret:
 
 ```sh
-kubectl get secrets <azure-voting-redis-secret> -o jsonpath='{.data.password}' -n <your-namespace> | base64 --decode
+kubectl get secrets azure-voting-redis-secret -o jsonpath='{.data.password}' -n <your-namespace> | base64 --decode
 ```
 
 There are a few ways to store secrets in a more secure manner. One recommended way is to use Azure Key Vault.
@@ -231,7 +230,7 @@ You will first delete the kubernetes secret created before.
 {% collapsible %}
 
 ```sh
-kubectl delete secret <azure-voting-redis-secret> -n <your_namespace>
+kubectl delete secret azure-voting-redis-secret -n <your_namespace>
 ```
 
 Replace azure-voting-redis-secret and your_namespace by your secret's name and your_namespace by the namespace where you created the secret.
@@ -245,13 +244,13 @@ secret "azure-voting-redis-secret" deleted
 
 ##### Create an Azure Key Vault and add a secret
 
-You will create an Azure Key Vault and add a secret to store redis password.
+You will create an Azure Key Vault and add a secret to store redis password. Ask you teacher if a common Keyvault was not already provisionned for the whole class. In that case, the KeyVault already contains a password named **redis-password** and you don't need to create it.
 
 **Task Hints**
 
-* It's recommended to use az cli  and the `az keyvault create` command to create a Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault create -h` for details.
-* It's recommended to use az cli  and the `az keyvault secret` command to add a secret in Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault secret -h` for details.
-* The secret should be named redis-password.
+* It's recommended to use az cli and the `az keyvault create` command to create a Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault create -h` for details.
+* It's recommended to use az cli and the `az keyvault secret` command to add a secret in Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault secret -h` for details.
+* The secret should be named **redis-password**.
 
 {% collapsible %}
 
@@ -462,7 +461,7 @@ spec:
         "kubernetes.io/os": linux
       containers:
       - name: azure-vote-front
-        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+        image: lgmorand/azure-vote-front:v1
         ports:
         - containerPort: 80
         resources:
