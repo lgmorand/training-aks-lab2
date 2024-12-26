@@ -13,23 +13,7 @@ Add steps to your pipeline to push your images to your registry.
 
 {% collapsible %}
 
-With Docker
-
-``` bash
-docker login <url-registry>
-
-docker tag <image-name>[:TAG] <container-registry-IP>/<project-name>/<image-name>[:TAG]
-
-docker push <container-registry-IP>/<namespace-name>/<image_name>
-```
-
-With Podman
-
-``` bash
-podman push --creds='$(REGISTRY_CREDS)' $(REGISTRY)/aks-training/studentXXX-$(BUILD_ID)
-```
-
-With the Azure DevOps Docker task
+With the **Azure DevOps Docker** task
 
 ```yaml
 - task: Docker@2
@@ -45,6 +29,22 @@ With the Azure DevOps Docker task
 To create the service connection, go in your Azure DevOps project settings and add a **Docker Registry** service connection. Normally we would use a Azure Container Registry with a service principal, but for simplification, we are going to connect using Docker credentials (provided by your trainer)
 
 ![Service Connection](../media/acr-serviceconnection.png)
+
+With **Docker**
+
+``` bash
+docker login <url-registry>
+
+docker tag <image-name>[:TAG] <container-registry-IP>/<project-name>/<image-name>[:TAG]
+
+docker push <container-registry-IP>/<namespace-name>/<image_name>
+```
+
+With **Podman**
+
+``` bash
+podman push --creds='$(REGISTRY_CREDS)' $(REGISTRY)/aks-training/studentXXX-$(BUILD_ID)
+```
 
 {% endcollapsible %}
 

@@ -17,8 +17,6 @@ Create a deployment file named **deployment.yaml** which matchs the following re
 - set the environment variable GREETEE to AKS
 - set requests with CPU = 100m and Memory = 128Mi
 
-> **Security**: you container registry (if not an Azure Contaier Registry) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
-
 
 {% collapsible %}
 
@@ -58,7 +56,7 @@ spec:
 
 {% endcollapsible %}
 
-> Warning: If your container image is in a secured containers registry (harbor) which is not an ACR (Azure Container Registry) then Kubernetes does not know how to connect to it. You need to provide credentials to kubernetes, for it to be able to pull your image. It is the [image-pull secret property](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). You need to create this secret in your namespace.
+> **Security**: you container registry (if not an Azure Container Registry) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
 
 {% collapsible %}
 
@@ -101,26 +99,15 @@ If you are not using an Azure Container Registry, you may have to add credential
 
 To deploy an application within a cluster, you need to authenticate as a user who has enough rights (*[userRole](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)*) to create your objects (pods, services, etc.).
 
-In your case, authorization is managed by Rancher. You must get your credentials using the Rancher portal and download your *kubeconfig* file.
-
-{% collapsible %}
-Connect to your Rancher portal and select the right cluster
-
-![Select your cluster](../media/rancher-clusters.png)
-
-Then download your kubeconfig file which contains your credentials to connect against the cluster.
-
-![Download kubeconfig](../media/rancher-kubeconfig.png)
-
-{% endcollapsible %}
+To connect to a kubernetes cluster, you must use a kubeconfig file which contains the URL and the credentials to connect to a cluster. This kubeconfig will be provided by your trainer
 
 Once you retrieved your kubeconfig file, you must use it in the pipeline in order to be able to connect to the cluster.
 
 You can reuse it in your pipeline in different ways, some are better than others. Think and choose wisely:
 
 - you could add the kubeconfig in the git repository and use the --file parameter from kubectl command
-- you could inject the kubeconfig in a global variable and use it to recreate a kubeconfig during execution
-- you could create a [service connection](https://colinsalmcorner.com/azure-pipelines-for-private-aks-clusters/#create-a-generic-k8s-endpoint) which allow to securely connect to a resource.
+- you could inject the kubeconfig in a global variable and use it to recreate a kubeconfig during pipeline execution
+- you could create a [service connection](https://colinsalmcorner.com/azure-pipelines-for-private-aks-clusters/#create-a-generic-k8s-endpoint) which allow to securely connect to a resource (preferred solution)
 
 {% collapsible %}
 
