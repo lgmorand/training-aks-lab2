@@ -3,15 +3,15 @@ YOUR_COMPANY_NAME='adp' # put your company name in lowercase
 LOCATION='westeurope'
 RANDOM_ID=$RANDOM
 RG_NAME="rg_"$YOUR_COMPANY_NAME
-AKS_NAME="aks_"$YOUR_COMPANY_NAME
+AKS_NAME="aks-"$YOUR_COMPANY_NAME
 ACR_NAME="acr"$YOUR_COMPANY_NAME""$RANDOM_ID
-KV_NAME="kv_"$YOUR_COMPANY_NAME""$RANDOM_ID
+KV_NAME="kv"$YOUR_COMPANY_NAME""$RANDOM_ID
 MIN_NODE_COUNT="2"
 MAX_NODE_COUNT="3"
+SPN_NAME="spn-labaks"
 GREEN="\e[32m"
 RED="\e[31m"
 ENDCOLOR="\e[0m" 
-
 
 echo "This script will deploy the prerequisites for the AKS lab"
 echo ""
@@ -23,7 +23,12 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create ACR
 echo "creating the ACR"
-az acr create --resource-group $RG_NAME --name $ACR_NAME --sku Basic --location $LOCATION -o none
+az acr create --resource-group $RG_NAME --name $ACR_NAME --sku Basic --location $LOCATION --admin-enabled true -o none
+echo "login:"$ACR_NAME > acrcredentials.txt
+PWD=$(az acr credential show --name $ACR_NAME  --resource-group $RG_NAME --query passwords[0].value -o tsv)
+URL=$(az acr show --name $ACR_NAME --resource-group $RG_NAME --query loginServer -o tsv)
+echo "pwd:"$PWD >> acrcredentials.txt
+echo "URL:"$URL >> acrcredentials.txt
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create AKS
@@ -37,7 +42,7 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create Keyvault
 echo "create Keyvault"
-az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME 
+az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME  -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 
@@ -65,17 +70,22 @@ kubectl get ns
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create an SPN and role assignments
-az ad sp create-for-rbac --name spn-labaks > spncredentials.txt
-printf $"${RED}\u2714 Credentials are in spncredentials.txt ${ENDCOLOR}\n\n"
+az ad sp create-for-rbac --name $SPN_NAME > spncredentials.txt
+SPN_ID=$(az ad sp list --display-name $SPN_NAME  --query "[0].id" -o tsv)
+
 
 echo "add assignment to ACR"
-SCOPE=$(az acr show -n $ACR_NAME -g $RG_NAME --query id -o tsv)
-az role assignment create --assignee sp_name --role Contributor --scope 
+ACRID=$(az acr show -n $ACR_NAME -g $RG_NAME --query id -o tsv)
+az role assignment create --assignee $SPN_ID --role Contributor --scope $ACRID
 
 echo "add assignment to AKS"
-SCOPE=$(az aks show -n $AKS_NAME -g $RG_NAME --query id -o tsv)
-az role assignment create --assignee sp_name --role Contributor --scope 
+AKSID=$(az aks show -n $AKS_NAME -g $RG_NAME --query id -o tsv)
+az role assignment create --assignee $SPN_ID --role Contributor --scope $AKSID
 
 echo "add assignment to KV"
-SCOPE=$(az keyvault show -n $KV_NAME -g $RG_NAME --query id -o tsv)
-az role assignment create --assignee sp_name --role Contributor --scope 
+KVID=$(az keyvault show -n $KV_NAME -g $RG_NAME --query id -o tsv)
+az role assignment create --assignee $SPN_ID --role Contributor --scope $KVID
+
+
+printf $"${RED}\u2714 Credentials for SPN are in spncredentials.txt ${ENDCOLOR}\n\n"
+printf $"${RED}\u2714 Credentials for Docker Registry are in acrcredentials.txt ${ENDCOLOR}\n\n"
