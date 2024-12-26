@@ -34,8 +34,8 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create AKS
 echo "creating the AKS cluster"
-az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --enable-keda --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys --min-count 3 --max-count 7 -o none
-AKS_OIDC_ISSUER="$(az aks show --resource-group <rg> --name <aks_cluster_name> --query "oidcIssuerProfile.issuerUrl" -o tsv)"
+az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --enable-keda --enable-oidc-issuer --enable-workload-identity --enable-addons azure-keyvault-secrets-provider --generate-ssh-keys --min-count 3 --max-count 7 -o none
+AKS_OIDC_ISSUER="$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 echo $AKS_OIDC_ISSUER > aksoidc.txt
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
@@ -45,7 +45,7 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create Keyvault
 echo "create Keyvault"
-az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME  -o none
+az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME --enable-rbac-authorization false -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 
@@ -93,8 +93,23 @@ az identity create --name $IDENTITY_NAME --resource-group $RG_NAME --location $L
 IDENTITY_ID=$(az ad sp list --display-name $IDENTITY_NAME  --query "[0].id" -o tsv)
 USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query 'clientId' -o tsv)"
 echo $USER_ASSIGNED_CLIENT_ID
-az keyvault set-policy --name $KV_NAME --secret-permissions get --spn "$IDENTITY_ID" -o none
+az keyvault set-policy --name $KV_NAME --secret-permissions get --object-id "$IDENTITY_ID" -o none
 
+az identity federated-credential create --name fed-identity1 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student1:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity2 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student2:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity3 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student3:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity4 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student4:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity5 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student5:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity6 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student6:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity7 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student7:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity8 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student8:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity9 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student9:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity10 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student10:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity11 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student11:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity12 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student12:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity13 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student13:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity14 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student14:my-serviceaccount -o none
+az identity federated-credential create --name fed-identity15 --identity-name $IDENTITY_NAME --resource-group $RG_NAME --issuer $AKS_OIDC_ISSUER --subject system:serviceaccount:student15:my-serviceaccount -o none
 
 printf $"${RED}\u2714 Credentials for SPN are in spncredentials.txt ${ENDCOLOR}\n\n"
 printf $"${RED}\u2714 Credentials for Docker Registry are in acrcredentials.txt ${ENDCOLOR}\n\n"

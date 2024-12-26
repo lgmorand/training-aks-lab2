@@ -16,6 +16,7 @@ Alternatively, you need to meet the following requirements:
 - [Azure CLI](https://github.com/Azure/azure-cli) v2.67.0
 - [kubectl](https://github.com/kubernetes/kubectl) v1.30+
 - [Kubernetes](https://kubernetes.io) v1.30+ (managed from [Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/aks))
+- a tool to manager a cluster such as [OpenLens](https://github.com/MuhammedKalkan/OpenLens) would greatly help
 
 ### Azure subscription
 

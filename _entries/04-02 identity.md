@@ -310,8 +310,8 @@ kind: ServiceAccount
 metadata:
   annotations:
     azure.workload.identity/client-id: <user-assigned-client-id>
-  name: <service-account-name>
-  namespace: <your_namespace>
+  name: my-serviceaccount
+  namespace: studentXXX
 ```
 
 Apply the deployment:
