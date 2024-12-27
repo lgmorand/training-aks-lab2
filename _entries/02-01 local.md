@@ -75,7 +75,7 @@ docker run -it -p 9000:3000 helloworld
 
 {% endcollapsible %}
 
-Finally, load the app URL [http://localhost:9000](http://localhost:9000) in a browser and make sure you see a `Hello world` message.
+Finally, load the app URL [http://localhost:9000](http://localhost:9000) in a browser and make sure you see a `Hello world` message. As you can see, the container runs a node app, exposes it on port 3000 but thanks to docker, you run it and expose the running container behind the port 9000.
 
 > **Resources**
 >

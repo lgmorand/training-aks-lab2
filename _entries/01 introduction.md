@@ -12,7 +12,7 @@ You can use this guide as a Kubernetes tutorial and as study material to help yo
 
 Some things you’ll be going through:
 
-- Build you own application
+- Build your own application
 - Containerize it
 - Push it to a registry
 - Deploying the app to AKS
@@ -20,7 +20,7 @@ Some things you’ll be going through:
 You will also cover subjects such as:
 
 - DevSecOps
-- Scaling (manual and auto)
+- Scaling (manual and automatic)
 - Implement some security
 - some other fun things
 

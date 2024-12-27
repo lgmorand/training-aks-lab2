@@ -17,8 +17,6 @@ Create a deployment file named **deployment.yaml** which matchs the following re
 - set the environment variable GREETEE to AKS
 - set requests with CPU = 100m and Memory = 128Mi
 
-> **Security**: you harbor registry may require credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
-
 
 {% collapsible %}
 
@@ -54,8 +52,45 @@ spec:
           env:
             - name: GREETEE
               value: AKS
-       imagePullSecrets: # credentials to connect to your registry
-       - name: harbor-pull
+```
+
+{% endcollapsible %}
+
+> **Security**: you container registry (**if not an Azure Container Registry**) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
+
+{% collapsible %}
+
+Open a shell connected to your cluster and run the command. Don't forget to put quotes around username and password. Sometimes, depending on your shell, some chars may be removed without the quotes
+
+```bash
+kubectl create secret docker-registry registry-pull `
+                      --docker-server=yourregistry.fqdn `
+                      --docker-username='<user>' `
+                      --docker-password='<password>' `
+                      -n your-namespace
+```
+
+If you are not using an Azure Container Registry, you may have to add credentials to connect to the cluster such as:
+
+```yaml
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: <registry-fqdn>/helloworld:tag # Registry + image name
+          name: helloworld
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: GREETEE
+              value: AKS
+       imagePullSecrets: # credentials to connect to your registry. ONLY required if not using an attached Azure Container Registry
+       - name: registry-pull
 ```
 
 {% endcollapsible %}
@@ -64,32 +99,21 @@ spec:
 
 To deploy an application within a cluster, you need to authenticate as a user who has enough rights (*[userRole](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)*) to create your objects (pods, services, etc.).
 
-In your case, authorization is managed by Rancher. You must get your credentials using the Rancher portal and download your *kubeconfig* file.
-
-{% collapsible %}
-Connect to your Rancher portal and select the right cluster
-
-![Select your cluster](../media/rancher-clusters.png)
-
-Then download your kubeconfig file which contains your credentials to connect against the cluster.
-
-![Download kubeconfig](../media/rancher-kubeconfig.png)
-
-{% endcollapsible %}
+To connect to a kubernetes cluster, you must use a kubeconfig file which contains the URL and the credentials to connect to a cluster. This kubeconfig will be provided by your trainer
 
 Once you retrieved your kubeconfig file, you must use it in the pipeline in order to be able to connect to the cluster.
 
 You can reuse it in your pipeline in different ways, some are better than others. Think and choose wisely:
 
 - you could add the kubeconfig in the git repository and use the --file parameter from kubectl command
-- you could inject the kubeconfig in a global variable and use it to recreate a kubeconfig during execution
-- you could create a [service connection](https://colinsalmcorner.com/azure-pipelines-for-private-aks-clusters/#create-a-generic-k8s-endpoint) which allow to securely connect to a resource.
+- you could inject the kubeconfig in a global variable and use it to recreate a kubeconfig during pipeline execution
+- you could create a [service connection](https://colinsalmcorner.com/azure-pipelines-for-private-aks-clusters/#create-a-generic-k8s-endpoint) which allow to securely connect to a resource (preferred solution)
 
 {% collapsible %}
 
 The cleanest way is to create a service connection which will be injectected in your pipeline.
 
-> Note If your company does not use Rancher, the simplest way to get your kubeconfig file is to use the az aks get-credentials command and reuse the generated kubeconfig file
+> Note: the simplest way to get your kubeconfig file is to use the az aks get-credentials command and reuse the generated kubeconfig file
 
 ```cli
     # login to azure
@@ -113,7 +137,7 @@ From there, create a kubernetes service connection based on kubeconfig.
 
 ### Add deployment steps in your pipeline
 
-Add steps to you pipeline to use the kubectl command in addition of your kubeconfig file. If you created a service connection, you can use the **KubernetesManifest** task.
+Add steps to your pipeline to use the kubectl command in addition of your kubeconfig file. If you created a service connection, you can use the **KubernetesManifest** task.
 
 {% collapsible %}
 
@@ -126,24 +150,9 @@ steps:
   inputs:
     action: 'deploy'
     connectionType: 'kubernetesServiceConnection'
-    kubernetesServiceConnection: 'aks-test'
+    kubernetesServiceConnection: 'name-of-service-connection'
+    namespace: 'studentXXX'
     manifests: './deployment.yaml'
-```
-
-{% endcollapsible %}
-
-> Warning: Your container image is in a secured containers registry (harbor). Kubernetes does not know how to connect to it. You need to provide credentials to kubernetes, for it to be able to pull your image. It is the [image-pull secret property](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/). You need to create this secret in your namespace.
-
-{% collapsible %}
-
-Open a shell connected to your cluster and run the command. Don't forget to put quotes around username and password. Sometimes, depending on your shell, some chars may be removed without the quotes
-
-```bash
-kubectl create secret docker-registry harbor-pull `
-                      --docker-server=registry.gems.myengie.com `
-                      --docker-username='<user>' `
-                      --docker-password='<password>' `
-                      -n your-namespace
 ```
 
 {% endcollapsible %}

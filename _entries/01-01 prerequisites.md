@@ -13,9 +13,10 @@ You can use [the Azure Cloud Shell service](https://shell.azure.com) once you lo
 
 Alternatively, you need to meet the following requirements:
 
-- [Azure CLI](https://github.com/Azure/azure-cli) v2.54.0
-- [kubectl](https://github.com/kubernetes/kubectl) v0.26.9+
-- [Kubernetes](https://kubernetes.io) v1.26+ (managed from [Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/aks))
+- [Azure CLI](https://github.com/Azure/azure-cli) v2.67.0
+- [kubectl](https://github.com/kubernetes/kubectl) v1.30+
+- [Kubernetes](https://kubernetes.io) v1.30+ (managed from [Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/aks))
+- a tool to manager a cluster such as [OpenLens](https://github.com/MuhammedKalkan/OpenLens) would greatly help
 
 ### Azure subscription
 
@@ -30,6 +31,9 @@ Please consider using your username and password to login into [the Azure Portal
 ```sh
 az account show
 az login
+
+# or by specifying the tenant
+az login --tenant ID_TENANT
 ```
 
 {% endcollapsible %}
