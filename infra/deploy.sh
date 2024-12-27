@@ -56,10 +56,10 @@ az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAM
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 echo "Add redis-password secret"
-az keyvault secret set --vault-name $KV_NAME --name redis-password --value Microsoft01!
+az keyvault secret set --vault-name $KV_NAME --name redis-password --value Microsoft01! -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
-az aks get-credentials -n $AKS_NAME -g $RG_NAME --file kubeconfig.txt #we just want a clean extract
+az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing --file kubeconfig.txt #we just want a clean extract
 az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing
 
 # Create namespaces
@@ -79,7 +79,6 @@ kubectl create ns student12
 kubectl create ns student13
 kubectl create ns student14
 kubectl create ns student15
-kubectl get ns
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create an SPN and role assignments
@@ -89,14 +88,17 @@ SPN_ID=$(az ad sp list --display-name $SPN_NAME  --query "[0].id" -o tsv)
 echo "add assignment to ACR"
 ACRID=$(az acr show -n $ACR_NAME -g $RG_NAME --query id -o tsv)
 az role assignment create --assignee $SPN_ID --role Contributor --scope $ACRID -o none
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 echo "add assignment to AKS"
 AKSID=$(az aks show -n $AKS_NAME -g $RG_NAME --query id -o tsv)
 az role assignment create --assignee $SPN_ID --role Contributor --scope $AKSID -o none
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 echo "add assignment to KV"
 KVID=$(az keyvault show -n $KV_NAME -g $RG_NAME --query id -o tsv)
 az role assignment create --assignee $SPN_ID --role Contributor --scope $KVID -o none
+printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # prepare workload identity
 echo "Prepare workload identity"
@@ -131,7 +133,7 @@ printf $"${GREEN}\u2714 AKS OIDC URL is in aksoidc.txt ${ENDCOLOR}\n\n"
 
 TENANT_ID=$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query tenantId -o tsv)
 
-echo "prepare unique documents for students"
+echo "prepare unique document for students"
 echo "Registry (required for service connection)" > students.txt
 echo "-------------------------------------------" >> students.txt
 echo "login:"$ACR_NAME >> students.txt
