@@ -255,6 +255,8 @@ To do this, you need:
 * a kubernetes service account (you'll have to create it)
 * a federated identity credential between the managed identity, service account issuer, and subject (federation already prepared by the teacher)
 
+> Note: normally you should do all steps but since you don't have access to this subscription, we did it for you
+
 {% collapsible %}
 
 Here is the full procedure, just make the relevant steps.
@@ -304,7 +306,7 @@ export AKS_OIDC_ISSUER="$(az aks show --resource-group <rg> --name <aks_cluster_
 echo $AKS_OIDC_ISSUER
 ```
 
-Create the federated identity credential between the managed identity, service account issuer, and subject using the az identity federated-credential create command.
+Create the federated identity credential between the managed identity, service account issuer, and subject using the az identity federated-credential create command. (already done by your teacher)
 
 ```sh
 az identity federated-credential create 

@@ -146,6 +146,7 @@ echo "----------------" >> students.txt
 echo "User assigned identity:"$USER_ASSIGNED_CLIENT_ID >> students.txt
 echo "OIDC Url:"$AKS_OIDC_ISSUER >> students.txt
 echo "Tenant ID:"$TENANT_ID >> students.txt
+echo "Keyvault Name:"$KV_NAME >> students.txt
 
 printf $"${GREEN}\u2714 Info required by students are in students.txt ${ENDCOLOR}\n\n"
 
