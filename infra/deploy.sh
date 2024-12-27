@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# Part to customize
+YOUR_COMPANY_NAME='adp' # put your company name in lowercase
+
+
+# Do not change anything below
 YOUR_COMPANY_NAME='adp' # put your company name in lowercase
 LOCATION='westeurope'
 RANDOM_ID=$RANDOM
@@ -14,6 +20,7 @@ GREEN="\e[32m"
 RED="\e[31m"
 ENDCOLOR="\e[0m" 
 
+STARTTIME=$(date +%s)
 echo "This script will deploy the prerequisites for the AKS lab"
 echo ""
 
@@ -51,7 +58,6 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 echo "Add redis-password secret"
 az keyvault secret set --vault-name $KV_NAME --name redis-password --value Microsoft01!
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
-
 
 az aks get-credentials -n $AKS_NAME -g $RG_NAME --file kubeconfig.txt #we just want a clean extract
 az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing
@@ -140,3 +146,6 @@ echo "OIDC Url:"$AKS_OIDC_ISSUER >> students.txt
 echo "Tenant ID:"$TENANT_ID >> students.txt
 
 printf $"${GREEN}\u2714 Info required by students are in students.txt ${ENDCOLOR}\n\n"
+
+ENDTIME=$(date +%s)
+echo "It took $((ENDTIME - STARTTIME)) seconds to complete this script..."

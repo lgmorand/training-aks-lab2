@@ -242,58 +242,30 @@ secret "azure-voting-redis-secret" deleted
 
 {% endcollapsible %}
 
-##### Create an Azure Key Vault and add a secret
-
-You will create an Azure Key Vault and add a secret to store redis password. Ask you teacher if a common Keyvault was not already provisionned for the whole class. In that case, the KeyVault already contains a password named **redis-password** and you don't need to create it.
-
-**Task Hints**
-
-* It's recommended to use az cli and the `az keyvault create` command to create a Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault create -h` for details.
-* It's recommended to use az cli and the `az keyvault secret` command to add a secret in Key Vault. Refer to the docs linked in the Resources section, or run `az keyvault secret -h` for details.
-* The secret should be named **redis-password**.
-
-{% collapsible %}
-
-Create a Key Vault:
-
-```sh
-az keyvault create --location <region> --name <akv_name> --resource-group <rg>
-```
-
-Replace region by the same region where AKS is deployed, akv_name and rg by the key vault name and resource group of your choice. The resource group must already exist.
-
-Add a secret named redis-password in Key Vault:
-
-```sh
-az keyvault secret set \
-  --vault-name <akv_name> \
-  --name redis-password \
-  --value <redis-password>
-```
-
-{% endcollapsible %}
-
 ##### Authentication to Azure Key Vault using workload identity
 
-The authentication to the Azure Key Vault will be implemented using workload identity. This will allow the pod to use an Azure user-assigned managed identity to authenticate to the Azure Key Vault.
+The authentication to the Azure Key Vault will be implemented using workload identity. This will allow the pod to use an Azure user-assigned managed identity to authenticate to the Azure Key Vault. An keyvault has already been provisioned by the teacher. It contains one secret named "redis-password", the one you want to inject into your pods. A way of doing it is to store a secret to access the keyvault (to retrieve this secret) but it would only move the problem: there is a secret in kubernetes. 
+A good alternative with AKS is to use Workload identity where you can connect safely to an Azure Service without any password nor connection string. Magic ! (almost)
 
 An Microsoft Entra Workload ID is an identity that an application running on a pod uses that authenticates itself against other Azure services that support it, such as Storage or SQL or Key Vault. It integrates with the native Kubernetes capabilities to federate with external identity providers. In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID then uses OpenID Connect (OIDC) to discover public signing keys and verify the authenticity of the service account token before exchanging it for a Microsoft Entra token.
 
 To do this, you need:
 
-* a user-assigned managed identity, this managed identity must have read access to Azure Key Vault secrets to be able to read redis-password
-* a kubernetes service account
-* a federated identity credential between the managed identity, service account issuer, and subject
+* a user-assigned managed identity, this managed identity must have read access to Azure Key Vault secrets to be able to read redis-password (already created by the teacher)
+* a kubernetes service account (you'll have to create it)
+* a federated identity credential between the managed identity, service account issuer, and subject (federation already prepared by the teacher)
 
 {% collapsible %}
 
-Create a managed identity using the az identity create command
+Here is the full procedure, just make the relevant steps.
+
+Create a managed identity using the az identity create command (no need to do it)
 
 ```sh
 az identity create --name <user_assigned_identity_name> --resource-group <rg> --location <region>
 ```
 
-Set an access policy for the managed identity to access the Key Vault secret using the following commands.
+Set an access policy for the managed identity to access the Key Vault secret using the following commands. (already done)
 
 ```sh
 export USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group <rg> --name <user_assigned_identity_name> --query 'clientId' -otsv)"
@@ -301,7 +273,7 @@ echo $USER_ASSIGNED_CLIENT_ID
 az keyvault set-policy --name <akv_name> --secret-permissions get --spn "${USER_ASSIGNED_CLIENT_ID}"
 ```
 
-Create the service account.
+Create the service account. (yeah, create it! :D)
 
 ```yaml
 apiVersion: v1
@@ -309,8 +281,8 @@ kind: ServiceAccount
 metadata:
   annotations:
     azure.workload.identity/client-id: <user-assigned-client-id>
-  name: my-serviceaccount
-  namespace: studentXXX
+  name: <service-account-name>
+  namespace: <your_namespace>
 ```
 
 Apply the deployment:
