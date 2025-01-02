@@ -103,7 +103,7 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 # prepare workload identity
 echo "Prepare workload identity"
 az identity create --name $IDENTITY_NAME --resource-group $RG_NAME --location $LOCATION -o none
-sleep 15 # wait for the identity to be created
+sleep 30 # wait for the identity to be created
 IDENTITY_ID=$(az ad sp list --display-name $IDENTITY_NAME  --query "[0].id" -o tsv)
 USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query 'clientId' -o tsv)"
 az keyvault set-policy --name $KV_NAME --secret-permissions get --object-id "$IDENTITY_ID" -o none
