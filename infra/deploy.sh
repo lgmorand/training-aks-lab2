@@ -31,7 +31,7 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create ACR
 echo "Creating the ACR"
-az acr create --resource-group $RG_NAME --name $ACR_NAME --sku Basic --location $LOCATION --admin-enabled true -o none
+az acr create --resource-group $RG_NAME --name $ACR_NAME --sku Basic --location $LOCATION --admin-enabled true -o none --only-show-errors
 echo "login:"$ACR_NAME > acrcredentials.txt
 PWD=$(az acr credential show --name $ACR_NAME  --resource-group $RG_NAME --query passwords[0].value -o tsv)
 URL=$(az acr show --name $ACR_NAME --resource-group $RG_NAME --query loginServer -o tsv)
@@ -41,26 +41,26 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create AKS
 echo "Creating the AKS cluster"
-az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --enable-keda --enable-oidc-issuer --enable-workload-identity --enable-addons azure-keyvault-secrets-provider --generate-ssh-keys --min-count 3 --max-count 7 -o none
+az aks create --name $AKS_NAME --resource-group $RG_NAME --location $LOCATION --enable-cluster-autoscaler --enable-keda --enable-oidc-issuer --enable-workload-identity --enable-addons azure-keyvault-secrets-provider --generate-ssh-keys --min-count 3 --max-count 7 -o none --only-show-errors
 AKS_OIDC_ISSUER="$(az aks show --resource-group $RG_NAME --name $AKS_NAME --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 echo $AKS_OIDC_ISSUER > aksoidc.txt
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 echo "Attaching the ACR"
-az aks update --name $AKS_NAME --resource-group $RG_NAME --attach-acr $ACR_NAME -o none
+az aks update --name $AKS_NAME --resource-group $RG_NAME --attach-acr $ACR_NAME -o none --only-show-errors
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 # Create Keyvault
 echo "Create Keyvault"
-az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME --enable-rbac-authorization false -o none
+az keyvault create --location $LOCATION --name $KV_NAME --resource-group $RG_NAME --enable-rbac-authorization false -o none --only-show-errors
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
 echo "Add redis-password secret"
 az keyvault secret set --vault-name $KV_NAME --name redis-password --value Microsoft01! -o none
 printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 
-az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing --file kubeconfig.txt #we just want a clean extract
-az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing
+az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing --file kubeconfig.txt -o none --only-show-errors #we just want a clean extract
+az aks get-credentials -n $AKS_NAME -g $RG_NAME --overwrite-existing -o none --only-show-errors
 
 # Create namespaces
 echo "creating namespaces"
@@ -103,6 +103,7 @@ printf $"${GREEN}\u2714 Success ${ENDCOLOR}\n\n"
 # prepare workload identity
 echo "Prepare workload identity"
 az identity create --name $IDENTITY_NAME --resource-group $RG_NAME --location $LOCATION -o none
+sleep 15 # wait for the identity to be created
 IDENTITY_ID=$(az ad sp list --display-name $IDENTITY_NAME  --query "[0].id" -o tsv)
 USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RG_NAME --name $IDENTITY_NAME --query 'clientId' -o tsv)"
 az keyvault set-policy --name $KV_NAME --secret-permissions get --object-id "$IDENTITY_ID" -o none
@@ -149,6 +150,3 @@ echo "Tenant ID:"$TENANT_ID >> students.txt
 echo "Keyvault Name:"$KV_NAME >> students.txt
 
 printf $"${GREEN}\u2714 Info required by students are in students.txt ${ENDCOLOR}\n\n"
-
-ENDTIME=$(date +%s)
-echo "It took $((ENDTIME - STARTTIME)) seconds to complete this script..."
