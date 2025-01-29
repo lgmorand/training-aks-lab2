@@ -165,7 +165,7 @@ service/azure-vote-front created
 
 ##### Check that the application is working fine
 
-You will first check front logs to be sure that there is no error connecting to redis backend and then check the application in your browser.
+You will first check front logs to be sure that there is no error connecting to redis backend and then check the application.
 
 {% collapsible %}
 
@@ -204,7 +204,7 @@ azure-vote-back    ClusterIP      10.0.194.219   <none>        6379/TCP       30
 azure-vote-front   LoadBalancer   10.0.74.34     10.2.0.24   80:31365/TCP   30s
 ```
 
-Test your app in your browser: [http://EXTERNAL-IP-FRONT](http://EXTERNAL-IP-FRONT)
+Test your app: [http://EXTERNAL-IP-FRONT](http://EXTERNAL-IP-FRONT) If the application is not exposed on Internet (check why), you have to do a CURL command from a container (kubectl exec)
 
 {% endcollapsible %}
 
