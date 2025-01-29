@@ -309,11 +309,11 @@ echo $AKS_OIDC_ISSUER
 Create the federated identity credential between the managed identity, service account issuer, and subject using the az identity federated-credential create command. (already done by your teacher)
 
 ```sh
-az identity federated-credential create 
-    --name <federated_identity_name> 
-    --identity-name <user_assigned_identity_name> 
-    --resource-group <rg> 
-    --issuer ${AKS_OIDC_ISSUER} 
+az identity federated-credential create \
+    --name <federated_identity_name> \
+    --identity-name <user_assigned_identity_name> \
+    --resource-group <rg> \
+    --issuer ${AKS_OIDC_ISSUER} \
     --subject system:serviceaccount:<service_account_namespace>:<service_account_name>
 ```
 
