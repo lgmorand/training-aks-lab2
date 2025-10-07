@@ -5,13 +5,13 @@ title: Loadtesting
 parent-id: autoscaling
 ---
 
-Our scaling configuration is ready but it's now time to test it. There are plenty of tools dedicated to such tasks. Normally your company offers a load testing service maybe based on 3rd party products such as vegeta, Locust, Gatling, k6, etc. You may also use [Azure Load Testing](https://learn.microsoft.com/azure/load-testing/overview-what-is-azure-load-testing) service which is a SaaS version and can be set up in few seconds.
+Our scaling configuration is ready but it's now time to test it. There are plenty of tools dedicated to such tasks. Normally your company offers a load testing service maybe based on 3rd party products such as vegeta, Locust, Gatling, k6, etc. You may also use [Azure Load Testing](https://learn.microsoft.com/azure/load-testing/overview-what-is-azure-load-testing) service which is a SaaS version and can be set up in a few seconds.
 
-> Important: At Engie, your applications are privatly exposed you may need advanced configuration which require additional rights. In case you don't have these rights, we recommend to use [a simple Ubuntu docker image](https://hub.docker.com/r/centminmod/docker-ubuntu-nghttp2-minimal) which contained load testing tool such as h2load or a **simpler** alternative, to use a docker image containing [vegeta](https://github.com/peter-evans/vegeta-docker).
+> Important: At Engie, your applications are privately exposed, you may need advanced configuration which requires additional rights. In case you don't have these rights, we recommend using [a simple Ubuntu docker image](https://hub.docker.com/r/centminmod/docker-ubuntu-nghttp2-minimal) which contains load testing tools such as h2load or a **simpler** alternative, to use a docker image containing [vegeta](https://github.com/peter-evans/vegeta-docker).
 
-The exercice is the following:
+The exercise is the following:
 
-The application *helloworld* you deployed contains different methods/controllers. Look in the source code and try to find the one which may consume more CPU. Then to simulate a high load you will need to simulate a high numbers of user doing a high numbers of requests against your application. For instance, try to simulate 1000 requests per second, during one minute.
+The application *helloworld* you deployed contains different methods/controllers. Look in the source code and try to find the one which may consume more CPU. Then to simulate a high load you will need to simulate a high number of users doing a high number of requests against your application. For instance, try to simulate 1000 requests per second, during one minute.
 
 #### Using vegeta
 
@@ -44,7 +44,7 @@ As soon as you run it, in another shell (or in the Web portal) you should see yo
 kubectl get hpa -w
 ```
 
-Which after some time should show something like this. It's normal that it takes few seconds/minutes.
+Which after some time should show something like this. It's normal that it takes a few seconds/minutes.
 
 ```bash
 azure [ ~ ]$ kubectl get hpa
@@ -80,7 +80,7 @@ In a different terminal tab, you can also run the following command to watch the
 kubectl get hpa -w
 ```
 
-Which after some time should show something like this. It's normal that it takes few seconds/minutes.
+Which after some time should show something like this. It's normal that it takes a few seconds/minutes.
 
 ```bash
 azure [ ~ ]$ kubectl get hpa
@@ -94,5 +94,5 @@ In addition to viewing your application metrics from the Azure Load Testing serv
 
 {% endcollapsible %}
 
-Now you can imagine scaling any based based on any metric, number of HTTP requests, number of files in a blog, messages in a queue, etc.
+Now you can imagine scaling any app based on any metric: number of HTTP requests, number of files in a blog, messages in a queue, etc.
 Autoscaling is critical for the resiliency of your app.

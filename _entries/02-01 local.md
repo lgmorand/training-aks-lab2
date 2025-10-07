@@ -25,7 +25,7 @@ cd hello-world
 
 To run the app in Docker, you need to add a [Dockerfile](https://docs.docker.com/build/building/packaging/#dockerfile) describing how the app will be built and run.
 
-Create a new file named `Dockerfile` at the root of the app code and fill it with instructions on how to build and run the app. We could build the app and then containerize the result, but it also smart to do the build within the container and guaranty the same behavior of the build part too. To do that, you will have to use multi-stage build.
+Create a new file named `Dockerfile` at the root of the app code and fill it with instructions on how to build and run the app. We could build the app and then containerize the result, but it is also a smart idea to do the build within the container and guarantee the same behavior of the build part too. To do that, you will have to use multi-stage build.
 
 > **Hint** Refer to Docker's [language-specific guide](https://docs.docker.com/language/) to write your dockerfile and try to find within the code, the command to build (compile) the app.
 

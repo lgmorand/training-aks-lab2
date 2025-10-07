@@ -9,4 +9,4 @@ Once you're done with the workshop, make sure to delete the resources you create
 
 [Delete](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_delete/) also your resources in your cluster.
 
-The workshop is done, congrats !
+The workshop is done, congrats!

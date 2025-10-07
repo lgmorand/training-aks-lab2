@@ -11,7 +11,7 @@ You need a deployment manifest file to deploy your application. The manifest fil
 
 Kubernetes groups containers into logical structures called pods, which have no intelligence. Deployments add the missing intelligence to create your application.
 
-Create a deployment file named **deployment.yaml** which matchs the following requirements:
+Create a deployment file named **deployment.yaml** which matches the following requirements:
 
 - deploy your application with only one replica
 - set the environment variable GREETEE to AKS
@@ -56,7 +56,7 @@ spec:
 
 {% endcollapsible %}
 
-> **Security**: you container registry (**if not an Azure Container Registry**) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
+> **Security**: your container registry (**if not an Azure Container Registry**) may require explicit credentials to access it (see this [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line) and this one [documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret)).
 
 {% collapsible %}
 
@@ -111,7 +111,7 @@ You can reuse it in your pipeline in different ways, some are better than others
 
 {% collapsible %}
 
-The cleanest way is to create a service connection which will be injectected in your pipeline.
+The cleanest way is to create a service connection which will be injected in your pipeline.
 
 > Note: the simplest way to get your kubeconfig file is to use the az aks get-credentials command and reuse the generated kubeconfig file
 
@@ -159,7 +159,7 @@ steps:
 
 When it's done. Run your deployment pipeline.
 
-### Check you deployed application
+### Check your deployed application
 
 Connect to your cluster and ensure the deployment is successful. Once done, get the name of the pod. Do it using the Azure Web portal but also using a command line (your computer or the Cloud Shell)
 

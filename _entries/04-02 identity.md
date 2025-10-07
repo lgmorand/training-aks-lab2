@@ -183,8 +183,8 @@ azure-vote-back-68f656645-pdvxw     1/1     Running   0          17m
 azure-vote-front-7df999d7c9-9xvqq   1/1     Running   0          17m
 ```
 
-Check logs with pod name, it shoud be azure-vote-front-xxx.
-If password is incorrect, you should see in logs something like: redis.exceptions.ResponseError: WRONGPASS invalid username-password pair.
+Check logs with pod name, it should be azure-vote-front-xxx.
+If the password is incorrect, you should see in logs something like: redis.exceptions.ResponseError: WRONGPASS invalid username-password pair.
 
 ```sh
 kubectl logs <pod_name> -n <your_namespace>
@@ -217,7 +217,7 @@ kubectl get secrets azure-voting-redis-secret -o jsonpath='{.data.password}' -n 
 ```
 
 There are a few ways to store secrets in a more secure manner. One recommended way is to use Azure Key Vault.
-So you are going to replace the kubernetes secret by a secret stored in Azure Key Vault and redeploy the application.
+So you are going to replace the kubernetes secret with a secret stored in Azure Key Vault and redeploy the application.
 
 ##### Delete Kubernetes secret
 
@@ -244,10 +244,10 @@ secret "azure-voting-redis-secret" deleted
 
 ##### Authentication to Azure Key Vault using workload identity
 
-The authentication to the Azure Key Vault will be implemented using workload identity. This will allow the pod to use an Azure user-assigned managed identity to authenticate to the Azure Key Vault. An keyvault has already been provisioned by the teacher. It contains one secret named "redis-password", the one you want to inject into your pods. A way of doing it is to store a secret to access the keyvault (to retrieve this secret) but it would only move the problem: there is a secret in kubernetes. 
-A good alternative with AKS is to use Workload identity where you can connect safely to an Azure Service without any password nor connection string. Magic ! (almost)
+The authentication to the Azure Key Vault will be implemented using workload identity. This will allow the pod to use an Azure user-assigned managed identity to authenticate to the Azure Key Vault. A keyvault has already been provisioned by the teacher. It contains one secret named "redis-password", the one you want to inject into your pods. One way of doing it is to store a secret to access the keyvault (to retrieve this secret) but it would only move the problem: there is a secret in kubernetes. 
+A good alternative with AKS is to use Workload identity where you can connect safely to an Azure Service without any password or connection string. Magic! (almost)
 
-An Microsoft Entra Workload ID is an identity that an application running on a pod uses that authenticates itself against other Azure services that support it, such as Storage or SQL or Key Vault. It integrates with the native Kubernetes capabilities to federate with external identity providers. In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID then uses OpenID Connect (OIDC) to discover public signing keys and verify the authenticity of the service account token before exchanging it for a Microsoft Entra token.
+A Microsoft Entra Workload ID is an identity that an application running on a pod uses to authenticate itself against other Azure services that support it, such as Storage or SQL or Key Vault. It integrates with the native Kubernetes capabilities to federate with external identity providers. In this security model, the AKS cluster acts as a token issuer. Microsoft Entra ID then uses OpenID Connect (OIDC) to discover public signing keys and verify the authenticity of the service account token before exchanging it for a Microsoft Entra token.
 
 To do this, you need:
 

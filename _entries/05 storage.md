@@ -6,18 +6,18 @@ is-parent: yes
 ---
 
 
-Some containerized applications may require to store files on the disk. They could use temporary storage (but it would disappear on next pod "restart") or they could require to retain the data. In such use case, you have three choices:
+Some containerized applications may require storing files on the disk. They could use temporary storage (but it would disappear on next pod "restart") or they could require retaining the data. In such a use case, you have three choices:
 
 - write on a network share
 - write using SDK but it implies to modify your code (i.e. SDK to write a blobstorage)
 - write on a local mount which points to a storage system
 
-You are going to use the last one in order to cover the case where the application code cannot be modify or when you want to remain agnostic from the Cloud provider.
+You are going to use the last one in order to cover the case where the application code cannot be modified or when you want to remain agnostic from the Cloud provider.
 
 You are going to use two concepts:
 
-- The [PVC (PersistantVolumenClaim)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims): which defines the requirements of your application
-- The [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/): which define the underlaying storage technology
+- The [PVC (PersistentVolumeClaim)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims): which defines the requirements of your application
+- The [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/): which defines the underlying storage technology
 
 List the available **StorageClass** in your cluster with the `kubectl` command. Try to keep in mind the name of the storage class related to Azure Files.
 
@@ -47,7 +47,7 @@ managed-premium         disk.csi.azure.com   Delete          WaitForFirstConsume
 
 {% endcollapsible %}
 
-Now it's time to create a PVC. Make it using a storage class related to a managed disk, which allow to read and write and request 1Go of storage. Don't hesitate to take a look at [the documentation](https://learn.microsoft.com/en-us/azure/aks/concepts-storage).
+Now it's time to create a PVC. Make it using a storage class related to a managed disk, which allows reading and writing and request 1GB of storage. Don't hesitate to take a look at [the documentation](https://learn.microsoft.com/en-us/azure/aks/concepts-storage).
 
 {% collapsible %}
 
@@ -91,7 +91,7 @@ spec:
         claimName: managed-csi
 ```
 
-Deploy you pod. It may takes more time to start up because it needs to provision a storage account first and do some magical to map it to your pod.
+Deploy your pod. It may take more time to start up because it needs to provision a storage account first and do some magic to map it to your pod.
 
 Once done, connect inside your pod and create a file inside the folder `/mnt/azure` because we need to check that everything is working fine.
 
@@ -105,7 +105,7 @@ If you get no error, it's a good sign.
 
 {% endcollapsible %}
 
-We told that we are using a StorageClass related to Azure Files. In fact, behind the scene, it will create a storage account for us but where is it ? Are able to find it and check that the file `hello.txt` is indeed stored ?
+We said that we are using a StorageClass related to Azure Files. In fact, behind the scenes, it will create a storage account for us but where is it? Are you able to find it and check that the file `hello.txt` is indeed stored?
 
 {% collapsible %}
 

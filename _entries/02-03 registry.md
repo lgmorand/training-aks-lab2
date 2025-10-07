@@ -7,7 +7,7 @@ parent-id: build
 
 #### Publish your container image
 
-To deploy a docker image, you first need to publish it a container registry. On Azure, the solution is Azure Container Registry but you may also decide to use an alternative such as [Harbor](https://goharbor.io) or [Artifactory](https://jfrog.com/fr/artifactory/) if your company use them.
+To deploy a docker image, you first need to publish it to a container registry. On Azure, the solution is Azure Container Registry but you may also decide to use an alternative such as [Harbor](https://goharbor.io) or [Artifactory](https://jfrog.com/fr/artifactory/) if your company uses them.
 
 Add steps to your pipeline to push your images to your registry.
 
@@ -26,7 +26,7 @@ With the **Azure DevOps Docker** task
         tags: 'helloworld-$(tag)'
 ```
 
-To create the service connection, go in your Azure DevOps project settings and add a **Docker Registry** service connection. Normally we would use a Azure Container Registry with a service principal, but for simplification, we are going to connect using Docker credentials (provided by your trainer)
+To create the service connection, go to your Azure DevOps project settings and add a **Docker Registry** service connection. Normally we would use an Azure Container Registry with a service principal, but for simplification, we are going to connect using Docker credentials (provided by your trainer)
 
 ![Service Connection](../media/acr-serviceconnection.png)
 
