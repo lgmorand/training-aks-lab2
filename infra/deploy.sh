@@ -5,7 +5,6 @@ YOUR_COMPANY_NAME='adp' # put your company name in lowercase
 
 
 # Do not change anything below
-YOUR_COMPANY_NAME='adp' # put your company name in lowercase
 LOCATION='westeurope'
 RANDOM_ID=$RANDOM
 RG_NAME="rg-"$YOUR_COMPANY_NAME
