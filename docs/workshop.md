@@ -85,19 +85,19 @@ Head over to <https://shell.azure.com> and sign in with your Azure Subscription 
 
 Select **Bash** as your shell.
 
-![Select Bash](./media/cloudshell/0-bash.png)
+![Select Bash](assets/cloudshell/0-bash.png)
 
 Select **Show advanced settings**
 
-![Select Show advanced settings](./media/cloudshell/1-mountstorage-advanced.png)
+![Select Show advanced settings](assets/cloudshell/1-mountstorage-advanced.png)
 
 Set the **Storage account** and **File share** names to your resource group name (all lowercase, without any special characters), then hit **Create storage**
 
-![Azure Cloud Shell](./media/cloudshell/2-storageaccount-fileshare.png)
+![Azure Cloud Shell](assets/cloudshell/2-storageaccount-fileshare.png)
 
 You should now have access to the Azure Cloud Shell
 
-![Set the storage account and fileshare names](./media/cloudshell/3-cloudshell.png)
+![Set the storage account and fileshare names](assets/cloudshell/3-cloudshell.png)
 
 
 </details>
@@ -264,7 +264,7 @@ Import the downloaded files (hello-world.zip) to your repository. You can either
 <summary>Click to expand</summary>
 
 
-![Manual import](../media/import-files.png)
+![Manual import](.assets/import-files.png)
 
 
 </details>
@@ -408,7 +408,7 @@ With the **Azure DevOps Docker** task
 
 To create the service connection, go to your Azure DevOps project settings and add a **Docker Registry** service connection. Normally we would use an Azure Container Registry with a service principal, but for simplification, we are going to connect using Docker credentials (provided by your trainer)
 
-![Service Connection](../media/acr-serviceconnection.png)
+![Service Connection](.assets/acr-serviceconnection.png)
 
 With **Docker**
 
@@ -575,11 +575,11 @@ The cleanest way is to create a service connection which will be injected in you
 
 To create a Service Connection, in the settings of your Azure DevOps project and click on "Service connections"
 
-![Service connections](../media/add-service-connection-1.png)
+![Service connections](.assets/add-service-connection-1.png)
 
 From there, create a kubernetes service connection based on kubeconfig.
 
-![Kubernetes service connections](../media/add-service-connection-2.png)
+![Kubernetes service connections](.assets/add-service-connection-2.png)
 
 <div class="warning" data-title="Warning">
 
@@ -626,7 +626,7 @@ Connect to your cluster and ensure the deployment is successful. Once done, get 
 
 Using the Web portal
 
-![Using the Web portal](../media/check-deployment.png)
+![Using the Web portal](.assets/check-deployment.png)
 
 Using a shell
 
@@ -1572,7 +1572,7 @@ In Azure, when you create an AKS cluster in a resource group, there is always a 
 
 You should be able to find a storage and using the storage explorer, be able to check that the file is indeed here.
 
-![Check file existence](../media/hello.png)
+![Check file existence](.assets/hello.png)
 
 
 </details>
@@ -1748,7 +1748,7 @@ In the Azure Portal, navigate to your shared resource group and click on your Az
 - Click the **Run test** button to start the test.
 - If you are familiar with creating JMeter tests, you can also create a JMeter test file and upload it to Azure Load Testing.
 
-![Azure Load Testing](../media/quickstart-test-virtual-users.png)
+![Azure Load Testing](.assets/quickstart-test-virtual-users.png)
 
 As the test is running, run the following command to watch the deployment scale.
 
