@@ -48,7 +48,21 @@ Alternatively, you need to meet the following requirements:
 - [Azure CLI](https://github.com/Azure/azure-cli) v2.81.0
 - [kubectl](https://github.com/kubernetes/kubectl) v1.32+
 - [Kubernetes](https://kubernetes.io) v1.32+ (managed from [Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/aks))
+- [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/) as a container runtime
 - a tool to manager a cluster such as [OpenLens](https://github.com/MuhammedKalkan/OpenLens) would greatly help
+
+<div class="tip" data-title="Tip">
+
+> If you are using **Podman** instead of Docker, you can create a permanent alias so that all `docker` commands work transparently with Podman:
+>
+> **Bash / Git Bash / WSL:**
+> ```sh
+> echo 'alias docker=podman' >> ~/.bashrc && source ~/.bashrc
+> ```
+>
+> After this, all `docker` commands in this workshop (build, run, push, etc.) will be executed by Podman.
+
+</div>
 
 ### Azure subscription
 
@@ -148,7 +162,13 @@ You will implement autoscaling and simulate high load on your application.
 
 # Build
 
-In this challenge, you will add a Dockerfile to a web application, build it, and run it using a Docker container. You must understand how to build container images before using an orchestrator such as Kubernetes. The build of the image must be done on your computer and Docker must be installed and running.
+In this challenge, you will add a Dockerfile to a web application, build it, and run it using a Docker container. You must understand how to build container images before using an orchestrator such as Kubernetes. The build of the image must be done on your computer and Docker (or Podman) must be installed and running.
+
+<div class="tip" data-title="Tip">
+
+> If you are using **Podman** instead of Docker, make sure you have set up the alias `docker=podman` (see Prerequisites section). All `docker` commands below will then work with Podman without any changes.
+
+</div>
 
 ## Build locally
 
@@ -413,11 +433,11 @@ To create the service connection, go to your Azure DevOps project settings and a
 With **Docker**
 
 ``` bash
-docker login <url-registry>
+docker login <registry-fqdn>
 
-docker tag <image-name>[:TAG] <container-registry-IP>/<project-name>/<image-name>[:TAG]
+docker tag <image-name>[:TAG] <registry-fqdn>/<namespace>/<image-name>[:TAG]
 
-docker push <container-registry-IP>/<namespace-name>/<image_name>
+docker push <registry-fqdn>/<namespace>/<image-name>[:TAG]
 ```
 
 With **Podman**
